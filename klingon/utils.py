@@ -32,11 +32,12 @@ def get_mac_address_and_interface():
             mac_address = addresses[netifaces.AF_LINK][0]['addr']
             return mac_address, interface
         else:
-            gws = netifaces.gateways()
-            default_interface = gws['default'][netifaces.AF_INET][1]
-            addresses = netifaces.ifaddresses(default_interface)
-            mac_address = addresses[netifaces.AF_LINK][0]['addr']
-            return mac_address, default_interface
+            for interface in netifaces.interfaces():
+                addresses = netifaces.ifaddresses(interface)
+                if netifaces.AF_INET in addresses:
+                    if addresses[netifaces.AF_INET][0]['addr'] != '127.0.0.1':
+                        mac_address = addresses[netifaces.AF_LINK][0]['addr']
+                        return mac_address, interface
     else:
         for interface in netifaces.interfaces():
             try:
