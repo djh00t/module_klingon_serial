@@ -25,12 +25,15 @@ def get_mac_address_and_interface():
                If the MAC address and interface cannot be determined, returns (None, None).
     """
     for interface in netifaces.interfaces():
+        print(f"Checking interface: {interface}")
         try:
             mac_address = netifaces.ifaddresses(interface)[netifaces.AF_LINK][0]['addr']
+            print(f"MAC address for {interface}: {mac_address}")
             mac_address_int = int(mac_address.replace(':', ''), 16)
             if mac_address_int == uuid.getnode():
                 return mac_address, interface
-        except (IndexError, KeyError, ValueError):
+        except (IndexError, KeyError, ValueError) as e:
+            print(f"Error for {interface}: {e}")
             continue
     return None, None
 
