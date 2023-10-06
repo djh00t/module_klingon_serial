@@ -117,9 +117,12 @@ def generate_tests(functions):
                     # print the test code
                     print(f"Test code for function {function} in script {script}:\n{test}")
                     # save the test immediately, one file per function
-                    test_file = f"tests/test_{os.path.splitext(os.path.basename(script))[0]}_{function}.py"
+                    module_name = os.path.splitext(os.path.basename(script))[0]
+                    test_file = f"tests/test_{module_name}_{function}.py"
                     with open(test_file, "w") as f:
-                        # write import statements at the top
+                        # write import statement for the module being tested
+                        f.write(f"from klingon import {module_name}\n")
+                        # write other import statements
                         f.write('\n'.join([line + '  # type: ignore' if 'netifaces2' in line or 'strtobool' in line else line for line in import_lines]))
                         f.write('\n\n')  # Add an extra newline here
                         # write the rest of the test code
