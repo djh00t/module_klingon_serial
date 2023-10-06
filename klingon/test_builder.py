@@ -16,7 +16,8 @@ IGNORE = [
     "./.pytest_cache/", 
     "./docs/", 
     "./setup.py", 
-    "./klingon/test_builder.py", 
+    "./klingon/test_builder.py",
+    "./klingon/openai_billing.py", 
     "./tests/"
 ]
 
@@ -32,6 +33,7 @@ def filter_scripts(scripts, ignore_list):
     filtered_scripts = [script for script in scripts if not any(script.startswith(i) for i in ignore_list)]
     logger.info(f"Filtered {len(filtered_scripts)} scripts")
     return filtered_scripts
+
 
 def inspect_scripts(scripts):
     logger.info(f"Inspecting {len(scripts)} scripts")
@@ -94,7 +96,7 @@ def generate_tests(functions):
                     tree = ast.parse(code)
                     function_node = next(node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef) and node.name == function)
                     function_code = ast.unparse(function_node)
-                    prompt = f"Generate pytest tests that cover 100% of the following function:\n\n```python\n{function_code}\n```\n\nEnsure that the tests cover all edge cases and provide meaningful assertions. Only return the testing code as a snippet. All comments should be prefixed with '# '."
+                    prompt = f"Generate pytest tests that cover 100% of the following function:\n\n```python\n{function_code}\n```\n\nEnsure that the tests cover edge cases and provide meaningful assertions. Only return the testing code as a snippet. All comments should be prefixed with '# '."
                     prompt_chunks = chunk_prompt(prompt)
                     responses = []
                     for chunk, length in prompt_chunks:
