@@ -15,7 +15,7 @@ IGNORE = [
     ".pytest_cache/", 
     "docs/", 
     "setup.py", 
-    "klingon/test_builder.py", 
+    "./klingon/test_builder.py", 
     "tests/"
 ]
 
