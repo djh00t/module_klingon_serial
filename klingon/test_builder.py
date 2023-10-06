@@ -195,7 +195,7 @@ def generate_tests(functions):
                         module_path = os.path.dirname(script).replace('./', '').replace('/', '.')
                         f.write(f"from {module_path}.{module_name} import {function}\n")
                         # write other import statements
-                        f.write('\n'.join([line + '  # type: ignore' if 'strtobool' in line else line for line in import_lines]))
+                        f.write('\n'.join([line.replace("from distutils.util import strtobool", "from klingon.strtobool import strtobool") + '  # type: ignore' if 'strtobool' in line else line for line in import_lines]))
                         f.write('\n\n')  # Add an extra newline here
                         # write the rest of the test code
                         f.write('\n'.join(other_lines))
