@@ -134,7 +134,7 @@ def generate_tests(functions):
                     test_file = f"tests/test_{module_name}_{function}.py"
                     with open(test_file, "w") as f:
                         # write import statement for the module being tested
-                        f.write(f"from {directory_name}.{module_name} import {function}\n")
+                        f.write(f"import {directory_name}.{module_name}\n")
                         # write other import statements
                         f.write('\n'.join([line + '  # type: ignore' if 'strtobool' in line else line for line in import_lines]))
                         f.write('\n\n')  # Add an extra newline here
