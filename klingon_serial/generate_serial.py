@@ -1,7 +1,7 @@
 import uuid
 import os
 from datetime import datetime
-from strtobool import strtobool
+from .strtobool import strtobool
 from utils import get_debug, get_mac_address_and_interface
 
 def get_mac_address_hex():
