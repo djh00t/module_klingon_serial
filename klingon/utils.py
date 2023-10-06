@@ -24,10 +24,14 @@ def get_mac_address_and_interface():
         tuple: A tuple containing the MAC address and the network interface.
                If the MAC address and interface cannot be determined, returns (None, None).
     """
+    print(f"netifaces.AF_LINK: {netifaces.AF_LINK}")
+    print(f"uuid.getnode(): {uuid.getnode()}")
     for interface in netifaces.interfaces():
         print(f"Checking interface: {interface}")
         try:
-            mac_address = netifaces.ifaddresses(interface)[netifaces.AF_LINK][0]['addr']
+            addresses = netifaces.ifaddresses(interface)
+            print(f"Addresses for {interface}: {addresses}")
+            mac_address = addresses[netifaces.AF_LINK][0]['addr']
             print(f"MAC address for {interface}: {mac_address}")
             mac_address_int = int(mac_address.replace(':', ''), 16)
             if mac_address_int == uuid.getnode():
