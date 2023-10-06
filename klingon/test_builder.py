@@ -94,7 +94,7 @@ def generate_tests(functions):
                     tree = ast.parse(code)
                     function_node = next(node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef) and node.name == function)
                     function_code = ast.unparse(function_node)
-                    prompt = f"Generate pytest tests that cover 100% of the following function:\n\n```python\n{function_code}\n```\n\nEnsure that the tests cover all edge cases and provide meaningful assertions. Only return the testing code as a snippet. Do not include any comments."
+                    prompt = f"Generate pytest tests that cover 100% of the following function:\n\n```python\n{function_code}\n```\n\nEnsure that the tests cover all edge cases and provide meaningful assertions. Only return the testing code as a snippet. All comments should be prefixed with '# '."
                     prompt_chunks = chunk_prompt(prompt)
                     responses = []
                     for chunk, length in prompt_chunks:
