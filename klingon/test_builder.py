@@ -95,7 +95,7 @@ def generate_tests(functions):
                     responses = []
                     for chunk, length in prompt_chunks:
                         max_tokens = min(length - 100, 4096)
-                        response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=chunk, max_tokens=max_tokens)
+                        response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=chunk, max_tokens=max_tokens, timeout=30)
                         responses.append(response)
                     test = "\n" + response.choices[0].text.strip()
                     # convert markdown comments to Google docstring comments
@@ -128,6 +128,7 @@ def generate_tests(functions):
                     format_and_check_test_file(test_file)
                     break
                 except subprocess.CalledProcessError:
+                    logger.warning(f"Retry attempt {retries+1} for {script}")
                     retries += 1
                     logger.warning(f"Formatting failed for {test_file}. Retrying {retries} of 3 times.")
             if retries == 3:
