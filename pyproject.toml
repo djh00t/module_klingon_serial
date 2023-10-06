@@ -1,0 +1,22 @@
+[build-system]
+requires = ['setuptools', 'wheel', 'datetime', 'netifaces', 'pytest', 'uuid']
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = "klingon_serial"
+version = "0.0.1"
+authors = [
+  { name="David Hooton", email="klingon_serial+david@hooton.org" },
+]
+description = "Get a globally unique serial"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/djh00t/module_klingon_serial"
+"Bug Tracker" = "https://github.com/djh00t/module_klingon_serial/issues"

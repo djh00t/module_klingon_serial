@@ -12,10 +12,11 @@ setup(
     packages=find_packages(),
     author='David Hooton',
     author_email='klingon_serial+david@hooton.org',
-    description='Get globally unique serial',
+    description='Get a globally unique serial',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/djh00t/module_klingon_serial',
+    readme='README.md',
     include_package_data=True,
     install_requires=[
         'datetime',
