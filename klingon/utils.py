@@ -24,18 +24,19 @@ def get_mac_address_and_interface():
         tuple: A tuple containing the MAC address and the network interface.
                If the MAC address and interface cannot be determined, returns (None, None).
     """
-    default_gateway_and_interface = netifaces.gateways()['default'][netifaces.AF_INET]
-    default_interface = default_gateway_and_interface[1]
-    print(f"Default interface: {default_interface}")
-    try:
-        addresses = netifaces.ifaddresses(default_interface)
-        print(f"Addresses for {default_interface}: {addresses}")
-        mac_address = addresses[netifaces.AF_LINK][0]['addr']
-        print(f"MAC address for {default_interface}: {mac_address}")
-        return mac_address, default_interface
-    except (IndexError, KeyError, ValueError) as e:
-        print(f"Error for {default_interface}: {e}")
-        return None, None
+    for interface in netifaces.interfaces():
+        try:
+            addresses = netifaces.ifaddresses(interface)
+            if netifaces.AF_INET in addresses:
+                print(f"Default interface: {interface}")
+                print(f"Addresses for {interface}: {addresses}")
+                mac_address = addresses[netifaces.AF_LINK][0]['addr']
+                print(f"MAC address for {interface}: {mac_address}")
+                return mac_address, interface
+        except (IndexError, KeyError, ValueError) as e:
+            print(f"Error for {interface}: {e}")
+            continue
+    return None, None
 
 mac_address, interface = get_mac_address_and_interface()
 print(mac_address)
