@@ -22,6 +22,15 @@ IGNORE = [
 ]
 
 def find_python_scripts(directory):
+    """
+    Find all Python scripts in a given directory.
+
+    Args:
+        directory (str): The directory to search for Python scripts.
+
+    Yields:
+        str: The path to a Python script.
+    """
     logger.info(f"Finding Python scripts in directory: {directory}")
     for root, dirs, files in os.walk(directory):
         dirs[:] = [d for d in dirs if os.path.join(root, d) not in IGNORE]
@@ -30,12 +39,31 @@ def find_python_scripts(directory):
                 yield os.path.join(root, file)
 
 def filter_scripts(scripts, ignore_list):
+    """
+    Filter out scripts that should be ignored.
+
+    Args:
+        scripts (list): The list of scripts to filter.
+        ignore_list (list): The list of scripts to ignore.
+
+    Returns:
+        list: The filtered list of scripts.
+    """
     filtered_scripts = [script for script in scripts if not any(script.startswith(i) for i in ignore_list)]
     logger.info(f"Filtered {len(filtered_scripts)} scripts")
     return filtered_scripts
 
 
 def inspect_scripts(scripts):
+    """
+    Inspect Python scripts to find functions.
+
+    Args:
+        scripts (list): The list of scripts to inspect.
+
+    Yields:
+        tuple: A tuple containing the path to a script and the name of a function.
+    """
     logger.info(f"Inspecting {len(scripts)} scripts")
     for script in scripts:
         logger.debug(f"Inspecting script: {script}")
@@ -53,6 +81,15 @@ def inspect_scripts(scripts):
 
 
 def check_existing_tests(functions):
+    """
+    Check if tests already exist for a list of functions.
+
+    Args:
+        functions (list): The list of functions to check for tests.
+
+    Yields:
+        tuple: A tuple containing the path to a script, the name of a function, and a boolean indicating whether a test exists.
+    """
     functions = list(functions)
     logger.info(f"Checking existing tests for {len(functions)} functions")
     for script, function in functions:
@@ -67,6 +104,16 @@ def check_existing_tests(functions):
             yield script, function, False
 
 def chunk_prompt(prompt, max_length=2500):
+    """
+    Chunk a prompt into smaller pieces.
+
+    Args:
+        prompt (str): The prompt to chunk.
+        max_length (int, optional): The maximum length of a chunk. Defaults to 2500.
+
+    Returns:
+        list: A list of chunks.
+    """
     tokens = prompt.split(' ')
     chunks = []
     chunk = []
@@ -83,6 +130,15 @@ def chunk_prompt(prompt, max_length=2500):
     return chunks
 
 def generate_tests(functions):
+    """
+    Generate tests for a list of functions.
+
+    Args:
+        functions (list): The list of functions to generate tests for.
+
+    Yields:
+        str: The generated test code.
+    """
     functions = list(functions)
     logger.info(f"Generating tests for {len(functions)} functions")
     for script, function, exists in functions:
@@ -154,15 +210,39 @@ def generate_tests(functions):
                 logger.error(f"Failed to format {test_file} after 3 retries.")
 
 def save_tests(tests):
+    """
+    Save generated tests.
+
+    Args:
+        tests (list): The list of generated tests to save.
+    """
     # no need to save tests here as they are saved in generate_tests
     pass
 
 def find_imports(script):
+    """
+    Find all import statements in a script.
+
+    Args:
+        script (str): The path to the script.
+
+    Returns:
+        list: A list of imported modules.
+    """
     with open(script) as f:
         tree = ast.parse(f.read())
     return [node.names[0].name for node in ast.walk(tree) if isinstance(node, ast.Import)]
 
 def find_missing_requirements(scripts):
+    """
+    Find all modules that are imported in scripts but not listed in requirements.txt.
+
+    Args:
+        scripts (list): The list of scripts to check.
+
+    Returns:
+        set: A set of missing requirements.
+    """
     all_imports = set()
     for script in scripts:
         all_imports.update(find_imports(script))
@@ -171,6 +251,12 @@ def find_missing_requirements(scripts):
     return all_imports - requirements
 
 def format_and_check_test_file(test_file):
+    """
+    Format and check a test file.
+
+    Args:
+        test_file (str): The path to the test file.
+    """
     # format the test file using black
     subprocess.run(["black", test_file], check=True)
     # check the test file using mypy
