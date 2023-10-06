@@ -1,9 +1,14 @@
-import pytest
+"""Tests for the `strtobool()` function in `klingon.strtobool`.
 
-from klingon import strtobool
+"""
+import pytest
+from klingon.strtobool import strtobool
 
 
 def test_strtobool_true():
+    """Test that the `strtobool()` function returns True for valid true
+    values."""
+    
     assert strtobool("y") == 1
     assert strtobool("yes") == 1
     assert strtobool("t") == 1
@@ -13,6 +18,9 @@ def test_strtobool_true():
 
 
 def test_strtobool_false():
+    """Test that the `strtobool()` function returns False for valid false
+    values."""
+    
     assert strtobool("n") == 0
     assert strtobool("no") == 0
     assert strtobool("f") == 0
@@ -22,5 +30,8 @@ def test_strtobool_false():
 
 
 def test_strtobool_invalid():
+    """Test that the `strtobool()` function raises a ValueError for invalid
+    values."""
+    
     with pytest.raises(ValueError):
         strtobool("invalid")

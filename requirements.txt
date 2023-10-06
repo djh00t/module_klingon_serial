@@ -1,23 +1,4 @@
-# requirements.txt
-# klingon.generate_serial
+netifaces
+pytest
 uuid
-datetime
-
-# klingon.utils
-netifaces2
-
-# klingon.test
-openai
-coverage
-
-# Documentation
-Sphinx==4.0.2
-
-# Testing
-unittest2==1.1.0
-mypy
-black
-types-mock
-mock
-pygame
-requests
+setuptools

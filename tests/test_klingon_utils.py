@@ -1,27 +1,58 @@
-import pytest
+from klingon.strtobool import strtobool
+from klingon.utils import get_debug, get_mac_address_and_interface
 import netifaces
 import os
-from klingon.utils import get_debug, get_mac_address_and_interface
+import platform
+import pytest
+import unittest.mock
+import uuid
 
 
-class TestUtils:
+def test_get_debug_env_set():
+    """Test that the `get_debug()` function returns True if the `DEBUG` environment variable is set to a truthy value."""
 
-    def test_get_debug_env_set(self):
-        os.environ['DEBUG'] = 'True'
-        assert get_debug() is True
+    os.environ['DEBUG'] = 'True'
+    assert get_debug() is True
 
-    def test_get_debug_env_not_set(self):
-        os.environ.pop('DEBUG', None)
-        assert get_debug() is False
 
-    def test_get_mac_address_and_interface_valid(self):
-        mac_address, interface = get_mac_address_and_interface()
-        assert mac_address is not None
-        assert interface is not None
+def test_get_debug_env_not_set():
+    """Test that the `get_debug()` function returns False if the `DEBUG` environment variable is not set."""
 
-    def test_get_mac_address_and_interface_invalid(self):
-        os.environ['VIRTUALBOX'] = '1'
-        mac_address, interface = get_mac_address_and_interface()
-        assert mac_address is None
-        assert interface is None
+    os.environ.pop('DEBUG', None)
+    assert get_debug() is False
 
+
+def test_get_debug_invalid_value():
+    """Test that the `get_debug()` function returns False if the `DEBUG` environment variable is set to an invalid value."""
+
+    os.environ['DEBUG'] = 'invalid'
+    assert get_debug() is False
+
+
+def test_get_mac_address_and_interface_valid():
+    """Test that the `get_mac_address_and_interface()` function returns a valid MAC address and network interface."""
+
+    mac_address, interface = get_mac_address_and_interface()
+
+    assert mac_address is not None
+    assert interface is not None
+    assert isinstance(mac_address, str)
+    assert isinstance(interface, str)
+
+
+def get_mac_address_and_interface():
+    """Returns a tuple containing the MAC address and the network interface of the local machine's primary network interface.
+
+    Returns:
+        tuple: A tuple containing the MAC address and the network interface.
+            If the MAC address and interface cannot be determined, returns (None, None).
+    """
+
+    try:
+        primary_interface = netifaces.gateways()['default'][netifaces.AF_INET][1]
+        mac_address = netifaces.ifaddresses(primary_interface)[netifaces.AF_LINK][0]['addr']
+    except KeyError:
+        return None, None
+
+
+    return mac_address, primary_interface

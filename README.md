@@ -2,7 +2,11 @@
 
 ## Overview
 
-The `klingon_serial` Python module is designed to generate a unique hexadecimal serial number. This serial number is a concatenation of the machine's MAC address, the process ID (PID), and the current time in epoch format with millisecond precision. The module aims to offer a robust method for generating serials that are virtually collision-free.
+The `klingon_serial` Python module is designed to generate a unique hexadecimal
+serial number, avoiding serial conflicts in a distributed environment. The
+serial number is a concatenation of the machine's MAC address, the process ID
+(PID), and the current time in epoch format with millisecond precision. The
+module aims to offer a robust method for generating serials that are virtually collision-free.
 
 ## Installation
 
@@ -59,5 +63,3 @@ python -m unittest tests/test_klingon_serial.py
 ## Contributing
 
 Feel free to fork this repository and submit pull requests for improvements or additional features.
-```
-You can save this text in a file named `README.md`.
