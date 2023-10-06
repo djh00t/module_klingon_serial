@@ -216,6 +216,16 @@ def generate_tests(functions):
             if retries == 3:
                 logger.error(f"Failed to format {test_file} after 3 retries.")
 
+def save_tests(tests):
+    """
+    Save generated tests.
+
+    Args:
+        tests (list): The list of generated tests to save.
+    """
+    # no need to save tests here as they are saved in generate_tests
+    pass
+
 def find_imports(script):
     """
     Find all import statements in a script.
