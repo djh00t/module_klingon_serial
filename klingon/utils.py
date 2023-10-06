@@ -27,7 +27,7 @@ def get_mac_address_and_interface():
     for interface in netifaces.interfaces():
         try:
             addresses = netifaces.ifaddresses(interface)
-            if netifaces.AF_INET in addresses and netifaces.AF_LINK in addresses:
+            if netifaces.AF_INET in addresses:
                 print(f"Default interface: {interface}")
                 print(f"Addresses for {interface}: {addresses}")
                 mac_address = addresses[netifaces.AF_LINK][0]['addr']
