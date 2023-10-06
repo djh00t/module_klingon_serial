@@ -6,6 +6,7 @@ import re
 import subprocess
 import tokenize
 from io import BytesIO
+import pdb
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -126,6 +127,7 @@ def generate_tests(functions):
                         f.write('\n')
                     # format and check the test file
                     format_and_check_test_file(test_file)
+                    pdb.set_trace()
                     break
                 except subprocess.CalledProcessError:
                     logger.warning(f"Retry attempt {retries+1} for {script}")
