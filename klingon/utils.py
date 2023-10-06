@@ -33,3 +33,7 @@ def get_mac_address_and_interface():
         except (IndexError, KeyError, ValueError):
             continue
     return None, None
+
+mac_address, interface = get_mac_address_and_interface()
+print(mac_address)
+print(interface)
