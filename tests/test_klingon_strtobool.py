@@ -2,7 +2,7 @@
 
 """
 import pytest
-from klingon.strtobool import strtobool
+from .klingon.strtobool import strtobool
 
 
 def test_strtobool_true():
