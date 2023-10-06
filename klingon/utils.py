@@ -1,5 +1,5 @@
 import os
-import netifaces2 as netifaces
+import netifaces
 import uuid
 from strtobool import strtobool
 
