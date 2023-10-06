@@ -70,13 +70,13 @@ def chunk_prompt(prompt, max_length=4090):
     length = 0
     for token in tokens:
         if length + len(token) > max_length:
-            chunks.append(' '.join(chunk))
+            chunks.append((' '.join(chunk), length))
             chunk = []
             length = 0
         chunk.append(token)
         length += len(token)
     if chunk:
-        chunks.append(' '.join(chunk))
+        chunks.append((' '.join(chunk), length))
     return chunks
 
 def generate_tests(functions):
@@ -93,8 +93,9 @@ def generate_tests(functions):
                     prompt = f"Generate pytest tests that cover 100% of the following code:\n\n```python\n{code_to_test}\n```\n\nEnsure that the tests cover all edge cases and provide meaningful assertions. Only return the testing code as a snippet. Do not include any comments."
                     prompt_chunks = chunk_prompt(prompt)
                     responses = []
-                    for chunk in prompt_chunks:
-                        response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=chunk, max_tokens=3000)
+                    for chunk, length in prompt_chunks:
+                        max_tokens = min(length, 4096)
+                        response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=chunk, max_tokens=max_tokens)
                         responses.append(response)
                     test = "\n" + response.choices[0].text.strip()
                     # convert markdown comments to Google docstring comments
