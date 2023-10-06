@@ -60,7 +60,7 @@ update-version:
 	@echo "Updating version number..."
 	@NEW_VERSION=$$(awk -F. '{print $$1"."$$2"."$$3+1}' VERSION); \
 	echo $$NEW_VERSION > VERSION; \
-	@sed -i '' "s/version='[0-9]*\.[0-9]*\.[0-9]*'/version='$NEW_VERSION'/g" setup.py; \
+	sed -i '' "s/version='[0-9]*\.[0-9]*\.[0-9]*'/version='$$NEW_VERSION'/g" setup.py; \
 	echo "New version number is $$NEW_VERSION"
 
 .PHONY: clean check-packages sdist wheel upload-test upload install uninstall test update-version
