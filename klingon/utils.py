@@ -19,36 +19,34 @@ def get_debug():
         return False
 
 def get_mac_address_and_interface():
-    """Get the MAC address and the associated network interface.
+    """Returns a tuple containing the MAC address and the network interface of the local machine's primary network interface.
 
     Returns:
         tuple: A tuple containing the MAC address and the network interface.
                If the MAC address and interface cannot be determined, returns (None, None).
     """
-    if platform.system() == 'Darwin':
-        interface = 'en0'
-        addresses = netifaces.ifaddresses(interface)
-        if netifaces.AF_LINK in addresses:
-            mac_address = addresses[netifaces.AF_LINK][0]['addr']
-            return mac_address, interface
-        else:
-            for interface in netifaces.interfaces():
-                addresses = netifaces.ifaddresses(interface)
-                if netifaces.AF_INET in addresses and netifaces.AF_LINK in addresses:
-                    if addresses[netifaces.AF_INET][0]['addr'] != '127.0.0.1':
-                        mac_address = addresses[netifaces.AF_LINK][0]['addr']
-                        return mac_address, interface
-    else:
-        for interface in netifaces.interfaces():
-            try:
-                addresses = netifaces.ifaddresses(interface)
-                if netifaces.AF_INET in addresses:
-                    mac_address = addresses[netifaces.AF_LINK][0]['addr']
-                    return mac_address, interface
-            except (IndexError, KeyError, ValueError) as e:
-                continue
-    return None, None
 
-mac_address, interface = get_mac_address_and_interface()
+    # Get the list of all network interfaces
+    interfaces = netifaces.interfaces()
+
+    # Find the primary network interface
+    primary_interface = None
+    for interface in interfaces:
+        if netifaces.ifaddresses(interface)[netifaces.AF_LINK][0]['addr'] == uuid.getnode():
+            primary_interface = interface
+            break
+
+    # If the primary network interface cannot be determined, return None
+    if primary_interface is None:
+        return None, None
+
+    # Get the MAC address of the primary network interface
+    mac_address = netifaces.ifaddresses(primary_interface)[netifaces.AF_LINK][0]['addr']
+
+    # Return the MAC address and network interface of the primary network interface
+    return mac_address, primary_interface
+
+
+mac_address, primary_interface = get_mac_address_and_interface()
 print(mac_address)
-print(interface)
+print(primary_interface)
