@@ -94,7 +94,7 @@ def generate_tests(functions):
                     prompt_chunks = chunk_prompt(prompt)
                     responses = []
                     for chunk, length in prompt_chunks:
-                        max_tokens = min(length, 4096)
+                        max_tokens = min(length - 100, 4096)
                         response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=chunk, max_tokens=max_tokens)
                         responses.append(response)
                     test = "\n" + response.choices[0].text.strip()
