@@ -208,7 +208,7 @@ def generate_tests(functions):
                         # if pytest fails, send the result and the test code to the OpenAI API to debug
                         debug_prompt = f"Debug the following pytest failure:\n\n{pytest_result.stdout}\n\nThe test code is:\n\n```python\n{test}\n``` Only respond with a code snippet solution, no comments."
                         #debug_response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=debug_prompt, max_tokens=200, timeout=30)
-                        debug_response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": debug_prompt}], max_tokens=200)
+                        debug_response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "system", "content": "You are the worlds best python unit test writer."}, {"role": "user", "content": debug_prompt}], max_tokens=200)
                         print(f"Debugging advice from OpenAI:\n\n{debug_response.choices[0].text.strip()}")
                         retries += 1
                         if retries == 3:
