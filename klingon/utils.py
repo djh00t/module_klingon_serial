@@ -32,7 +32,8 @@ def get_mac_address_and_interface():
     # Find the primary network interface
     primary_interface = None
     for interface in interfaces:
-        if netifaces.ifaddresses(interface)[netifaces.AF_LINK][0]['addr'] == uuid.getnode():
+        addresses = netifaces.ifaddresses(interface)
+        if netifaces.AF_LINK in addresses and addresses[netifaces.AF_LINK][0]['addr'] == uuid.getnode():
             primary_interface = interface
             break
 
