@@ -51,7 +51,7 @@ uninstall:
 # Run tests
 test:
 	@echo "Running unit tests..."
-	pytest tests/
+	pytest tests
 
 
 
@@ -63,4 +63,10 @@ update-version:
 	sed -i '' "s/version='[0-9]*\.[0-9]*\.[0-9]*'/version='$$NEW_VERSION'/g" setup.py; \
 	echo "New version number is $$NEW_VERSION"
 
-.PHONY: clean check-packages sdist wheel upload-test upload install uninstall test update-version
+## generate-pyproject: Generate a pyproject.toml file
+generate-pyproject:
+	@echo "[build-system]" > pyproject.toml
+	@echo "requires = ['setuptools', 'wheel']" >> pyproject.toml
+	@echo "build-backend = 'setuptools.build_meta'" >> pyproject.toml
+
+.PHONY: clean check-packages sdist wheel upload-test upload install uninstall test update-version generate-pyproject
