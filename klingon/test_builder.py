@@ -105,7 +105,7 @@ def generate_tests(functions):
                     # convert markdown comments to Google docstring comments
                     test = '\n'.join('# ' + line[3:] if line.startswith('```') else line for line in test.split('\n'))
                     # parse the test code to extract import statements and TODO comments
-                    import_lines = [line for line in test.split('\n') if line.startswith('import') or line.startswith('from')]
+                    import_lines = [line for line in test.split('\n') if (line.startswith('import') or line.startswith('from')) and not line.startswith('from app import')]
                     todo_lines = [line for line in test.split('\n') if 'TODO' in line]
                     other_lines = [line for line in test.split('\n') if line not in import_lines and line not in todo_lines]
 
