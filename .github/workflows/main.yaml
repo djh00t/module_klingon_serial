@@ -64,6 +64,7 @@ jobs:
       # Builds the package and runs tests
       - name: Build and test
         run: |
+          pip install .
           make sdist
           make wheel
           make test
@@ -110,6 +111,7 @@ jobs:
       # Builds the package and runs tests
       - name: Build and test
         run: |
+          pip install .
           make sdist
           make wheel
           make test
