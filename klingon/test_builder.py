@@ -209,7 +209,12 @@ def generate_tests(functions):
                         debug_prompt = f"Debug the following pytest failure:\n\n{pytest_result.stdout}\n\nThe test code is:\n\n```python\n{test}\n```"
                         debug_response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=debug_prompt, max_tokens=200, timeout=30)
                         print(f"Debugging advice from OpenAI:\n\n{debug_response.choices[0].text.strip()}")
-                    break
+                        retries += 1
+                        if retries == 3:
+                            logger.error(f"Failed to fix test for function {function} in script {script} after 3 retries. Skipping this test.")
+                            break
+                    else:
+                        break
                 except subprocess.CalledProcessError:
                     logger.warning(f"Retry attempt {retries+1} for {script}")
                     retries += 1
