@@ -16,7 +16,6 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/djh00t/module_klingon_serial',
-    readme='README.md',
     include_package_data=True,
     install_requires=[
         'datetime',
