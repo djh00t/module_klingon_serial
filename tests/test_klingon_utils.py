@@ -1,5 +1,5 @@
-from klingon.strtobool import strtobool
-from klingon.utils import get_debug, get_mac_address_and_interface
+from klingon_serial.strtobool import strtobool
+from klingon_serial.utils import get_debug, get_mac_address_and_interface
 import netifaces
 import os
 import platform

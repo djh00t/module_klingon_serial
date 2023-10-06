@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='klingon-serial',
+    name='klingon_serial',
     version='0.0.0',
     packages=find_packages(),
     install_requires=[
