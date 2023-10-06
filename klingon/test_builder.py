@@ -63,7 +63,7 @@ def check_existing_tests(functions):
         else:
             yield script, function, False
 
-def chunk_prompt(prompt, max_length=4090):
+def chunk_prompt(prompt, max_length=2500):
     tokens = prompt.split(' ')
     chunks = []
     chunk = []
