@@ -67,6 +67,22 @@ def lint_code(code):
     result = subprocess.run(['flake8', '--stdin-display-name', 'stdin', '-'], input=code, text=True, capture_output=True)
     return result.returncode == 0, result.stdout
 
+def chunk_prompt(prompt, max_length=4090):
+    tokens = prompt.split(' ')
+    chunks = []
+    chunk = []
+    length = 0
+    for token in tokens:
+        if length + len(token) > max_length:
+            chunks.append(' '.join(chunk))
+            chunk = []
+            length = 0
+        chunk.append(token)
+        length += len(token)
+    if chunk:
+        chunks.append(' '.join(chunk))
+    return chunks
+
 def generate_tests(functions):
     functions = list(functions)
     logger.info(f"Generating tests for {len(functions)} functions")
@@ -79,7 +95,11 @@ def generate_tests(functions):
                     with open(script) as f:
                         code_to_test = f.read()
                     prompt = f"Generate pytest tests that cover 100% of the following code:\n\n```python\n{code_to_test}\n```\n\nEnsure that the tests cover all edge cases and provide meaningful assertions. Only return the testing code as a snippet. Do not include any comments."
-                    response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=prompt, max_tokens=3000)
+                    prompt_chunks = chunk_prompt(prompt)
+                    responses = []
+                    for chunk in prompt_chunks:
+                        response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=chunk, max_tokens=3000)
+                        responses.append(response)
                     test = "\n" + response.choices[0].text.strip()
                     # convert markdown comments to Google docstring comments
                     test = '\n'.join('# ' + line[3:] if line.startswith('```') else line for line in test.split('\n'))
