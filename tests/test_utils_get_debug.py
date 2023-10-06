@@ -3,6 +3,7 @@ import pytest
 import netifaces
 import uuid
 from strtobool import strtobool  # type: ignore
+from klingon.utils import get_debug, get_mac_address_and_interface
 
 
 def test_get_debug_env_true():
