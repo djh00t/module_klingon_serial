@@ -1,13 +1,15 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='klingon-kafka',
-    version='0.1',
+    name='klingon-serial',
+    version='0.0.0',
     packages=find_packages(),
     install_requires=[
         'uuid',
-        'datetime'
-        'unittest2==1.1.0'
+        'datetime',
+        'netifaces',
+        'pytest',
+        'setuptools'
         ],
     classifiers=[
         "Programming Language :: Python :: 3",
