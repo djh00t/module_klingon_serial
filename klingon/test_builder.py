@@ -201,6 +201,13 @@ def generate_tests(functions):
                         f.write('\n')
                     # format and check the test file
                     format_and_check_test_file(test_file)
+                    # run the test file using pytest
+                    pytest_result = subprocess.run(["pytest", test_file], capture_output=True, text=True)
+                    if pytest_result.returncode != 0:
+                        # if pytest fails, send the result and the test code to the OpenAI API to debug
+                        debug_prompt = f"Debug the following pytest failure:\n\n{pytest_result.stdout}\n\nThe test code is:\n\n```python\n{test}\n```"
+                        debug_response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=debug_prompt, max_tokens=200, timeout=30)
+                        print(f"Debugging advice from OpenAI:\n\n{debug_response.choices[0].text.strip()}")
                     break
                 except subprocess.CalledProcessError:
                     logger.warning(f"Retry attempt {retries+1} for {script}")
