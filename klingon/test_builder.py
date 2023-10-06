@@ -12,12 +12,12 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 IGNORE = [
-    ".git/", 
-    ".pytest_cache/", 
-    "docs/", 
-    "setup.py", 
+    "./.git/", 
+    "./.pytest_cache/", 
+    "./docs/", 
+    "./setup.py", 
     "./klingon/test_builder.py", 
-    "tests/"
+    "./tests/"
 ]
 
 def find_python_scripts(directory):
@@ -123,7 +123,7 @@ def generate_tests(functions):
                         # write import statement for the module being tested
                         f.write(f"from klingon import {module_name}\n")
                         # write other import statements
-                        f.write('\n'.join([line + '  # type: ignore' if 'netifaces2' in line or 'strtobool' in line else line for line in import_lines]))
+                        f.write('\n'.join([line + '  # type: ignore' if 'strtobool' in line else line for line in import_lines]))
                         f.write('\n\n')  # Add an extra newline here
                         # write the rest of the test code
                         f.write('\n'.join(other_lines))
