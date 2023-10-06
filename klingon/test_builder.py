@@ -120,11 +120,12 @@ def generate_tests(functions):
                     # print the test code
                     print(f"Test code for function {function} in script {script}:\n{test}")
                     # save the test immediately, one file per function
+                    directory_name = os.path.dirname(script).replace('./', '').replace('/', '.')
                     module_name = os.path.splitext(os.path.basename(script))[0]
                     test_file = f"tests/test_{module_name}_{function}.py"
                     with open(test_file, "w") as f:
                         # write import statement for the module being tested
-                        f.write(f"from {module_name} import {function}\n")
+                        f.write(f"from {directory_name}.{module_name} import {function}\n")
                         # write other import statements
                         f.write('\n'.join([line + '  # type: ignore' if 'strtobool' in line else line for line in import_lines]))
                         f.write('\n\n')  # Add an extra newline here
