@@ -63,10 +63,6 @@ def check_existing_tests(functions):
         else:
             yield script, function, False
 
-def lint_code(code):
-    result = subprocess.run(['flake8', '--stdin-display-name', 'stdin', '-'], input=code, text=True, capture_output=True)
-    return result.returncode == 0, result.stdout
-
 def chunk_prompt(prompt, max_length=4090):
     tokens = prompt.split(' ')
     chunks = []
