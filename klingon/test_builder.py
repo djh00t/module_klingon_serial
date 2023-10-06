@@ -101,11 +101,20 @@ def generate_tests(functions):
                         max_tokens = min(length - 100, 4096)
                         response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=chunk, max_tokens=max_tokens, timeout=30)
                         responses.append(response)
-                    test = "\n" + response.choices[0].text.strip()
-                    # convert markdown comments to Google docstring comments
-                    test = '\n'.join('# ' + line[3:] if line.startswith('```') else line for line in test.split('\n'))
-                    # parse the test code to extract import statements and TODO comments
-                    import_lines = [line for line in test.split('\n') if (line.startswith('import') or line.startswith('from')) and not line.startswith('from app import')]
+                    while True:
+                        test = "\n" + response.choices[0].text.strip()
+                        # convert markdown comments to Google docstring comments
+                        test = '\n'.join('# ' + line[3:] if line.startswith('```') else line for line in test.split('\n'))
+                        # parse the test code to extract import statements and TODO comments
+                        import_lines = [line for line in test.split('\n') if (line.startswith('import') or line.startswith('from')) and not line.startswith('from app import')]
+                        try:
+                            # try to parse the test code to check if it's valid Python code
+                            ast.parse(test)
+                            # if the parsing succeeds, break the loop
+                            break
+                        except SyntaxError:
+                            # if the parsing fails, regenerate the test code
+                            continue
                     todo_lines = [line for line in test.split('\n') if 'TODO' in line]
                     other_lines = [line for line in test.split('\n') if line not in import_lines and line not in todo_lines]
 
