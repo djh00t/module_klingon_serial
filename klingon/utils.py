@@ -13,7 +13,7 @@ def get_debug():
     if debug is None:
         return False
     try:
-        return strtobool(debug)
+        return bool(strtobool(debug))
     except ValueError:
         return False
 
