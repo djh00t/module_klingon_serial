@@ -34,7 +34,7 @@ def get_mac_address_and_interface():
         else:
             for interface in netifaces.interfaces():
                 addresses = netifaces.ifaddresses(interface)
-                if netifaces.AF_INET in addresses:
+                if netifaces.AF_INET in addresses and netifaces.AF_LINK in addresses:
                     if addresses[netifaces.AF_INET][0]['addr'] != '127.0.0.1':
                         mac_address = addresses[netifaces.AF_LINK][0]['addr']
                         return mac_address, interface
