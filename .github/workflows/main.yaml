@@ -24,7 +24,7 @@ on:
   # branch and not for VERSION file changes
   push:
     branches: [ main ]
-    paths-ignore: [ VERSION ]
+    paths-ignore: [ "VERSION", "fission/" ]
   pull_request:
     branches: [ main ]
 
