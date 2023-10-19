@@ -17,4 +17,4 @@ def run_tests():
     return {"result": result.stdout}
 
 if __name__ == "__main__":
-    os.system("uvicorn fastapi_serial:app --reload --daemon")
+    os.system("uvicorn fastapi_serial:app --reload")
