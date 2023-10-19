@@ -13,7 +13,7 @@ def read_root():
 
 @app.get("/test")
 def run_tests():
-    result = subprocess.run(["pytest", "./tests/"], capture_output=True, text=True)
+    result = subprocess.run(["pytest","-v", "./tests/"], capture_output=True, text=True)
     return {"result": result.stdout}
 
 if __name__ == "__main__":
