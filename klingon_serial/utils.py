@@ -1,5 +1,5 @@
 import os
-import netifaces
+import psutil
 import uuid
 import platform
 from .strtobool import strtobool
@@ -27,10 +27,12 @@ def get_mac_address_and_interface():
     """
 
     # Get primary network interface by looking at the default route
-    primary_interface = netifaces.gateways()['default'][netifaces.AF_INET][1]
+    primary_interface = None
+    for interface, addrs in psutil.net_if_addrs().items():
+        for addr in addrs:
+            if addr.family == psutil.AF_LINK:
+                primary_interface = interface
+                mac_address = addr.address
+                return mac_address, primary_interface  # Return on first found interface
 
-    # Get the MAC address of the primary network interface
-    mac_address = netifaces.ifaddresses(primary_interface)[netifaces.AF_LINK][0]['addr']
-
-    # Return the MAC address and network interface of the primary network interface
-    return mac_address, primary_interface
+    return None, None  # Return None, None if no interface found
