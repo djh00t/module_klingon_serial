@@ -22,7 +22,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'datetime',
-        'netifaces',
+        'psutil',
         'pytest',
         'uuid',
         'setuptools'
