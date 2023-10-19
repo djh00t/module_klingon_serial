@@ -2,3 +2,5 @@ netifaces
 pytest
 uuid
 setuptools
+fastapi
+uvicorn
