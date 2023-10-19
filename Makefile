@@ -7,7 +7,7 @@ PYPI_TWINE_PASSWORD ?= $(PYPI_USER_AGENT)
 
 # Clean up build files
 clean:
-	rm -rf build dist *.egg-info .mypy_cache .pytest_cache */__pycache__
+	rm -rf build dist *.egg-info .mypy_cache .pytest_cache */__pycache__ *.zip *.gz *.whl */*.zip */*.gz */*.whl
 
 ## check-packages: Check for required pip packages and requirements.txt, install if missing
 check-packages:
