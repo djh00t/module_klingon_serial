@@ -14,10 +14,11 @@ def read_root():
 @app.get("/test")
 def run_tests():
     result = subprocess.run(["pytest","-v", "./tests/"], capture_output=True, text=True)
-    lines = result.stdout.split('\n')[8:-2]
-    print(lines)
+    lines = result.stdout.split('\n')[8:]
     test_results = {}
     for line in lines:
+        if line.strip() == '':
+            break
         key, value, *_ = line.split()
         test_results[key] = value
     return test_results
