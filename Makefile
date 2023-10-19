@@ -43,7 +43,6 @@ upload: test wheel
 install:
 	pip install -e .
 
-
 ## uninstall: Uninstall the local package
 uninstall:
 	pip uninstall get-user-agent
