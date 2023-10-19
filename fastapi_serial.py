@@ -15,6 +15,7 @@ def read_root():
 def run_tests():
     result = subprocess.run(["pytest","-v", "./tests/"], capture_output=True, text=True)
     lines = result.stdout.split('\n')[8:-2]
+    print(lines)
     test_results = {}
     for line in lines:
         key, value, *_ = line.split()
