@@ -14,12 +14,11 @@ def read_root():
 @app.get("/test")
 def run_tests():
     result = subprocess.run(["pytest","-v", "./tests/"], capture_output=True, text=True)
-    lines = result.stdout.split('\n')
+    lines = result.stdout.split('\n')[8:-2]
     test_results = {}
     for line in lines:
-        if "PASSED" in line or "FAILED" in line:
-            test_name, test_result = line.split("::")[-1].split()[0:2]
-            test_results[test_name] = test_result
+        key, value, *_ = line.split()
+        test_results[key] = value
     return test_results
 
 if __name__ == "__main__":
