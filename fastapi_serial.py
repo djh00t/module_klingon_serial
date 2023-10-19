@@ -23,5 +23,9 @@ def run_tests():
         test_results[key] = value
     return test_results
 
+@app.get("/ping")
+def ping():
+    return {"status": "OK"}
+
 if __name__ == "__main__":
     os.system("uvicorn fastapi_serial:app --reload")
