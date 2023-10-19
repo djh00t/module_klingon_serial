@@ -1,6 +1,6 @@
 from klingon_serial.strtobool import strtobool
 from klingon_serial.utils import get_debug, get_mac_address_and_interface
-import netifaces
+import psutil
 import os
 import platform
 import pytest
@@ -39,7 +39,6 @@ def test_get_mac_address_and_interface_valid():
     assert isinstance(mac_address, str)
     assert isinstance(interface, str)
 
-
 def get_mac_address_and_interface():
     """Returns a tuple containing the MAC address and the network interface of the local machine's primary network interface.
 
@@ -48,11 +47,9 @@ def get_mac_address_and_interface():
             If the MAC address and interface cannot be determined, returns (None, None).
     """
 
-    try:
-        primary_interface = netifaces.gateways()['default'][netifaces.AF_INET][1]
-        mac_address = netifaces.ifaddresses(primary_interface)[netifaces.AF_LINK][0]['addr']
-    except KeyError:
-        return None, None
+    for interface, addrs in psutil.net_if_addrs().items():
+        for addr in addrs:
+            if addr.family == psutil.AF_LINK and addr.address:
+                return addr.address, interface  # Return MAC address and interface name
 
-
-    return mac_address, primary_interface
+    return None, None  # Return None, None if no suitable interface found
