@@ -3,4 +3,4 @@
 .coverage
 **/.coverage
 **cache/*
-fission/
+**/*.zip
