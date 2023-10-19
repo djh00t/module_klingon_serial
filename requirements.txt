@@ -4,3 +4,4 @@ uuid
 setuptools
 fastapi
 uvicorn
+netifaces
