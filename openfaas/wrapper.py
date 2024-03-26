@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse, PlainTextResponse, XMLResponse
 from typing import Optional
+import uvicorn
 
 app = FastAPI()
 
@@ -15,3 +16,6 @@ async def root(accept: Optional[str] = Header(None)):
             return XMLResponse(content=xml_content)
     # Default to JSON response
     return JSONResponse(content=data)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
