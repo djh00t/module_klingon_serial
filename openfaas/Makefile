@@ -25,8 +25,8 @@ build:
 			docker push $(IMAGE_NAME):$(VERSION); \
 			docker push $(IMAGE_NAME):latest; \
 			# Remove any previous versions of the image \
-			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(docker images --filter=reference="$(IMAGE_NAME):$(VERSION)" -q)) || true; \
-			IMAGES=$$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(docker images --filter=reference="$(IMAGE_NAME):$(VERSION)" -q)); \
+			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(IMAGE_NAME):$(VERSION)) || true; \
+			IMAGES=$$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(IMAGE_NAME):$(VERSION)); \
 			if [ -n "$$IMAGES" ]; then \
 				docker image rm -f $$IMAGES; \
 			fi; \
