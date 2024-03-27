@@ -5,7 +5,9 @@ IMAGE_NAME := djh00t/klingon-serial
 build:
 	@echo "Building Docker image with version $(VERSION)"
 	# Build multi-platform images faster with Docker Build Cloud: https://docs.docker.com/go/docker-build-cloud
-	docker buildx create --name multi-arch-builder --use
+	@if ! docker buildx inspect multi-arch-builder > /dev/null 2>&1; then \
+		docker buildx create --name multi-arch-builder --use; \
+	fi
 	docker buildx build --platform linux/amd64,linux/arm64 --builder multi-arch-builder -t $(IMAGE_NAME):$(VERSION) -t $(IMAGE_NAME):latest --push .
 	@echo $$(echo $(VERSION) | awk -F. '{ printf "%d.%d.%d", $$1, $$2, $$3+1 }') > $(VERSION_FILE)
 
