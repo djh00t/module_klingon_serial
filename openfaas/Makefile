@@ -22,7 +22,7 @@ build:
 			docker push $(IMAGE_NAME):$(VERSION); \
 			docker push $(IMAGE_NAME):latest; \
 			# Remove any previous versions of the image
-			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(docker images --filter=reference="$(IMAGE_NAME):$(VERSION)" -q)) || true
+			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(docker images --filter=reference="$(IMAGE_NAME):$(VERSION)" -q)) || true; \
 		else \
 			echo "Health check failed, not pushing to Docker Hub."; \
 			exit 1; \
