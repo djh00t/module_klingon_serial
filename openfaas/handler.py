@@ -90,7 +90,7 @@ async def root(accept: Optional[str] = Header(None)):
         elif "application/yaml" in accept:
             yaml_content = yaml.dump(data)
             return YAMLResponse(content=yaml_content)
-    raise HTTPException(status_code=406, detail={"error": "Unsupported Accept header"})
+    raise HTTPException(status_code=406, detail="Unsupported Accept header")
 
 if __name__ == "__main__":
     import pytest
