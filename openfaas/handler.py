@@ -10,7 +10,7 @@ different content types.
 It can be run standalone using Uvicorn for local development and testing purposes.
 """
 
-from fastapi import FastAPI, Header
+from fastapi import FastAPI, Header, Query
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, Response
 from klingon_serial import generate_serial
 from starlette.responses import Response
@@ -39,27 +39,27 @@ async def favicon():
 
 
 @app.get("/")
-async def root(accept: Optional[str] = Header(None)):
+async def root(response_format: Optional[str] = Query(None, alias='format')):
     # Root endpoint that generates and returns a unique serial number in the requested format.
     # The Accept header determines the response content type: JSON, plain text, HTML, XML, or XHTML.
     # If the Accept header is not supported, it returns a 406 Not Acceptable with an error message.
     unique_serial = generate_serial().upper()
     data = {"serial": unique_serial}
-    if accept:
-        if "application/json" in accept:
+    if response_format:
+        if response_format == "json":
             return JSONResponse(content=data)
-        elif "text/plain" in accept:
+        elif response_format == "text":
             return PlainTextResponse(unique_serial)
-        elif "text/html" in accept:
+        elif response_format == "html":
             html_content = f'<html><body><p>{unique_serial}</p></body></html>'
             return HTMLResponse(content=html_content)
-        elif "application/xml" in accept or "text/xml" in accept:
+        elif response_format == "xml":
             xml_content = f'<root><serial>{unique_serial}</serial></root>'
             return XMLResponse(content=xml_content)
-        elif "application/xhtml+xml" in accept:
+        elif response_format == "xhtml":
             xhtml_content = f'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Serial Number</title></head><body><p>{unique_serial}</p></body></html>'
             return HTMLResponse(content=xhtml_content)
-        elif "application/yaml" in accept:
+        elif response_format == "yaml":
             yaml_content = yaml.dump(data)
             return YAMLResponse(content=yaml_content)
         else:
