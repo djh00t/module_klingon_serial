@@ -1,3 +1,5 @@
+from distutils.util import strtobool as str2bool
+
 def strtobool(val):
     """Convert a string representation of truth to true (True) or false (False).
 
