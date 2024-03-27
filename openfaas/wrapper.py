@@ -2,6 +2,8 @@ from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse, PlainTextResponse, Response
 from typing import Optional
 import uvicorn
+from fastapi.responses import JSONResponse, PlainTextResponse, Response
+from starlette.responses import Response
 
 class XMLResponse(Response):
     media_type = "application/xml"
@@ -11,6 +13,10 @@ import uvicorn
 
 app = FastAPI()
 from klingon_serial import generate_serial
+
+@app.get("/favicon.ico")
+async def favicon():
+    return Response(content="", media_type="image/x-icon", status_code=204)
 
 @app.get("/")
 async def root(accept: Optional[str] = Header(None)):
