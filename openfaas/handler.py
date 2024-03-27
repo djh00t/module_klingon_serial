@@ -67,6 +67,13 @@ async def root(accept: Optional[str] = Header(None)):
     return JSONResponse(content=data)
 
 if __name__ == "__main__":
+    import pytest
+    # Run the pytest suite before starting the server
+    test_exit_code = pytest.main()
+    if test_exit_code != 0:
+        # If tests fail, exit with the test exit code
+        import sys
+        sys.exit(test_exit_code)
     # If run as the main module, start the Uvicorn server to serve the FastAPI application.
     uvicorn.run("openfaas.handler:app", host="0.0.0.0", port=8000, reload=True)
 
