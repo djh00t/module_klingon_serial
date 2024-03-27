@@ -1,3 +1,2 @@
-fastapi>=0.65.0
-uvicorn[standard]>=0.13.0
-klingon-serial
+fastapi==0.65.2
+uvicorn==0.13.4
