@@ -24,7 +24,7 @@ build:
 			echo "Container started successfully, pushing to Docker Hub..."; \
 			docker push $(IMAGE_NAME):$(VERSION); \
 			docker push $(IMAGE_NAME):latest; \
-			# Remove any previous versions of the image
+			# Remove any previous versions of the image \
 			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(docker images --filter=reference="$(IMAGE_NAME):$(VERSION)" -q)) || true; \
 			IMAGES=$$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(docker images --filter=reference="$(IMAGE_NAME):$(VERSION)" -q)); \
 			if [ -n "$$IMAGES" ]; then \
