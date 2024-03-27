@@ -10,7 +10,7 @@ with open("VERSION", "r") as version_file:
     version = version_file.read().strip()
 
 setup(
-    name='klingon_serial',
+    name='klingon-serial',
     version=version,
     packages=find_packages(),
     author='David Hooton',
