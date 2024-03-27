@@ -28,26 +28,34 @@ The function is accessible via HTTP and generates a unique serial number upon ea
     - `application/html`
     - `application/xhtml+xml`
     - `application/yaml`
- - `/docs`: The Swagger UI documentation for the function.
- - `/favicon.ico`: An endpoint to serve the favicon.
- - `/health`: A health check endpoint that returns a 200 OK status code if the
-   function is running.
+Available formats are:
+ - `application/json`
+ - `text/plain`
+ - `application/xml`
+ - `application/html`
+ - `application/xhtml+xml`
+ - `application/yaml`
+- `/docs`: The Swagger UI documentation for the function.
+- `/favicon.ico`: An endpoint to serve the favicon.
+- `/health`: A health check endpoint that returns a 200 OK status code if the
+  function is running.
  - `docs`: The Swagger UI documentation for the function.
+- `docs`: The Swagger UI documentation for the function.
 
  ## Running Locally
 
-To facilitate local development and testing, instructions are provided for running the function using `uvicorn`, a lightning-fast ASGI server. This allows developers to test changes before deploying them to a live OpenFaaS environment.
+To deploy the function to an OpenFaaS cluster, you can use the provided `Makefile` to build the container image and then use the OpenFaaS CLI to deploy it.
 
- To run the function locally, you can use `make run`:
+ To build the Docker image for the function, run:
 
  ```bash
- make run
+ make build
  ```
 
- ## Deployment
+ After building the image, you can deploy it to your OpenFaaS cluster using the OpenFaaS CLI.
 
 
-Deployment instructions guide you through building the Docker container image for the function and deploying it to an OpenFaaS cluster using the OpenFaaS CLI. This ensures that the function is properly containerized and managed within the serverless framework.
+## Testing
 
 
 To deploy the function to an OpenFaaS cluster, you can use the provided `Dockerfile` to build the container image and then use the OpenFaaS CLI to deploy it.
