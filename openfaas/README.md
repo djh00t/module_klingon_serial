@@ -36,8 +36,18 @@
 
  You can test the function by sending HTTP requests to the deployed function's endpoint. For example, using `curl`:
 
+To test JSON response (default):
+
  ```bash
  curl http://<openfaas-gateway-url>/function/klingon-serial
+ ```
+ To test plain text response:
+ ```bash
+ curl -H "Accept: text/plain" http://<openfaas-gateway-url>/function/klingon-serial
+ ```
+ To test XML response:
+ ```bash
+ curl -H "Accept: application/xml" http://<openfaas-gateway-url>/function/klingon-serial
  ```
 
  ## Contributing
