@@ -11,6 +11,8 @@ build:
 	docker build --tag $(IMAGE_NAME):$(VERSION) .
 	# Remove any previous versions of the image
 	docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q) || true
+	# Remove any hanging containers that might have been left from previous tests
+	docker container rm -f $$(docker ps -a --filter "name=klingon-serial-test" -q) || true
 	# Run the Docker image to ensure it starts correctly
 	docker run -d --name klingon-serial-test -p 8080:8080 $(IMAGE_NAME):$(VERSION)
 	# Wait for a few seconds to give the container time to start
