@@ -1,11 +1,5 @@
  # OpenFaaS Function: Klingon Serial Generator
 
- ## Overview
-
- # OpenFaaS Function: Klingon Serial Generator
-
-This document provides an overview and usage instructions for the OpenFaaS function that generates unique hexadecimal serial numbers using the `klingon_serial` Python module. It is intended for developers and operators who want to deploy and manage this function within the OpenFaaS framework.
-
 ## Overview
 
 This OpenFaaS function provides an API to generate unique hexadecimal serial numbers using the `klingon_serial` Python module. It is designed to be deployed as a serverless function within the OpenFaaS framework.
@@ -25,17 +19,27 @@ The function is accessible via HTTP and generates a unique serial number upon ea
 
  ## Endpoints
 
- - `/`: The root endpoint that returns the serial number in JSON format by default. It can also return plain text or XML based on the `Accept` header.
- - `/favicon.ico`: An endpoint to serve the favicon.
+ - `/`: The root endpoint that returns the serial number in whatever format you
+   request using the `Accept` header.
+   Available formats are:
+    - `application/json`
+    - `text/plain`
+    - `application/xml`
+    - `application/html`
+    - `application/xhtml+xml`
+    - `application/yaml`
+ - `/health`: A health check endpoint that returns a 200 OK status code if the
+   function is running.
+ - `docs`: The Swagger UI documentation for the function.
 
  ## Running Locally
 
 To facilitate local development and testing, instructions are provided for running the function using `uvicorn`, a lightning-fast ASGI server. This allows developers to test changes before deploying them to a live OpenFaaS environment.
 
- To run the function locally, you can use `uvicorn`:
+ To run the function locally, you can use `make run`:
 
  ```bash
- uvicorn openfaas.wrapper:app --reload
+ make run
  ```
 
  ## Deployment
