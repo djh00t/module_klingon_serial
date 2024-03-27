@@ -39,12 +39,15 @@ async def favicon():
 
 
 @app.get("/")
-async def root(accept: Optional[str] = Header(None)):
+async def root(accept: Optional[str] = Header(None), accept_query: Optional[str] = Query(None, alias='Accept')):
     # Root endpoint that generates and returns a unique serial number in the requested format.
     # The Accept header determines the response content type: JSON, plain text, HTML, XML, or XHTML.
     # If the Accept header is not supported, it returns a 406 Not Acceptable with an error message.
     unique_serial = generate_serial().upper()
     data = {"serial": unique_serial}
+    # Check if 'Accept' is provided as a query parameter and override the header value
+    if accept_query:
+        accept = accept_query
     if accept:
         if "application/json" in accept:
             return JSONResponse(content=data)
