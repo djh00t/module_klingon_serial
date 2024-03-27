@@ -25,15 +25,14 @@ async def root(accept: Optional[str] = Header(None)):
         elif "text/html" in accept:
             html_content = f'<html><body><p>{unique_serial}</p></body></html>'
             return HTMLResponse(content=html_content)
-        elif "application/xml" in accept or "text/xml" in accept or "application/xhtml+xml" in accept:
-        elif "application/xhtml+xml" in accept:
-            xhtml_content = f'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Serial Number</title></head><body><p>{unique_serial}</p></body></html>'
-            return HTMLResponse(content=xhtml_content)
         elif "application/xml" in accept or "text/xml" in accept:
             xml_content = f'<root><serial>{unique_serial}</serial></root>'
             return XMLResponse(content=xml_content)
+        elif "application/xhtml+xml" in accept:
+            xhtml_content = f'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Serial Number</title></head><body><p>{unique_serial}</p></body></html>'
+            return HTMLResponse(content=xhtml_content)
     # Default to JSON response
     return JSONResponse(content=data)
 
 if __name__ == "__main__":
-    uvicorn.run("openfaas.wrapper:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("openfaas.handler:app", host="0.0.0.0", port=8000, reload=True)
