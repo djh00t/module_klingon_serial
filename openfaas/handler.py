@@ -23,6 +23,11 @@ class XMLResponse(Response):
 
 app = FastAPI()
 
+@app.get("/health")
+async def health():
+    # Health check endpoint; returns a 200 OK response to indicate the service is up and running.
+    return PlainTextResponse("OK", status_code=200)
+
 @app.get("/favicon.ico")
 async def favicon():
     # Endpoint to serve the favicon; returns a 204 No Content response as there is no favicon.
