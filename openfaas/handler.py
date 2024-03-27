@@ -27,7 +27,7 @@ class YAMLResponse(Response):
 
 app = FastAPI()
 
-response_types = {
+response_types = {  # Define the possible response types and their descriptions
     "application/json": {"description": "JSON response"},
     "text/plain": {"description": "Plain text response"},
     "text/html": {"description": "HTML response"},
@@ -52,7 +52,25 @@ async def favicon():
     return Response(content="", media_type="image/x-icon", status_code=204)
 
 
-@app.get("/", responses=response_types)
+@app.get("/", responses={  # Update the responses parameter to use proper status codes
+    "200": {
+        "description": "Successful Response",
+        "content": {
+            "application/json": {"example": {"serial": "123ABC"}},
+            "text/plain": {"example": "123ABC"},
+            "text/html": {"example": "<p>123ABC</p>"},
+            "application/xml": {"example": "<serial>123ABC</serial>"},
+            "application/xhtml+xml": {"example": "<p>123ABC</p>"},
+            "application/yaml": {"example": "serial: 123ABC"},
+        },
+    },
+    "406": {
+        "description": "Not Acceptable",
+        "content": {
+            "application/json": {"example": {"error": "Unsupported Accept header"}},
+        },
+    },
+})
 async def root(accept: Optional[str] = Header(None, alias='Accept', include_in_schema=True)):
     ...
     # Root endpoint that generates and returns a unique serial number in the requested format.
