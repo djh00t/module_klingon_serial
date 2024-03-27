@@ -2,7 +2,13 @@
 
  ## Overview
 
- This OpenFaaS function provides an API to generate unique hexadecimal serial numbers using the `klingon_serial` Python module. It is designed to be deployed as a serverless function within the OpenFaaS framework.
+ # OpenFaaS Function: Klingon Serial Generator
+
+This document provides an overview and usage instructions for the OpenFaaS function that generates unique hexadecimal serial numbers using the `klingon_serial` Python module. It is intended for developers and operators who want to deploy and manage this function within the OpenFaaS framework.
+
+## Overview
+
+This OpenFaaS function provides an API to generate unique hexadecimal serial numbers using the `klingon_serial` Python module. It is designed to be deployed as a serverless function within the OpenFaaS framework.
 
  ## Components
 
@@ -13,6 +19,8 @@
 
  ## Usage
 
+The function is accessible via HTTP and generates a unique serial number upon each request. The serial number is composed of the machine's MAC address, the process ID (PID), and the current time in milliseconds since the epoch. This document details how to interact with the function's endpoints and how to run and deploy the function.
+
  The function exposes an HTTP endpoint that returns a unique serial number when accessed. The serial number is a concatenation of the machine's MAC address, the process ID (PID), and the current time in epoch format with millisecond precision.
 
  ## Endpoints
@@ -22,6 +30,8 @@
 
  ## Running Locally
 
+To facilitate local development and testing, instructions are provided for running the function using `uvicorn`, a lightning-fast ASGI server. This allows developers to test changes before deploying them to a live OpenFaaS environment.
+
  To run the function locally, you can use `uvicorn`:
 
  ```bash
@@ -30,13 +40,20 @@
 
  ## Deployment
 
- To deploy the function to an OpenFaaS cluster, you can use the provided `Dockerfile` to build the container image and then use the OpenFaaS CLI to deploy it.
+
+Deployment instructions guide you through building the Docker container image for the function and deploying it to an OpenFaaS cluster using the OpenFaaS CLI. This ensures that the function is properly containerized and managed within the serverless framework.
+
+
+To deploy the function to an OpenFaaS cluster, you can use the provided `Dockerfile` to build the container image and then use the OpenFaaS CLI to deploy it.
 
  ## Testing
 
  You can test the function by sending HTTP requests to the deployed function's endpoint. For example, using `curl`:
 
 To test JSON response (default):
+
+ The following commands demonstrate how to test the function's response in different formats using `curl`. This is useful for verifying that the function behaves as expected and returns the correct content type based on the `Accept` header.
+
 
  ```bash
  curl http://<openfaas-gateway-url>/function/klingon-serial
@@ -51,5 +68,9 @@ To test JSON response (default):
  ```
 
  ## Contributing
+
+Contributions are encouraged, and this section outlines the expectations for contributing to the function's codebase. It emphasizes the importance of maintaining documentation and tests alongside code changes.
+
+## Contributing
 
  Contributions to the function are welcome. Please ensure that any changes are accompanied by corresponding updates to the documentation and tests.
