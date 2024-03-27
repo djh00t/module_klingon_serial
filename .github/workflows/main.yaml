@@ -35,8 +35,7 @@ on:
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a job called "build-test" and "build-production"
+# This workflow contains a job called "build-test" and "build-production"
 jobs:
   build-test:
     if: github.event_name == 'pull_request' && github.base_ref == 'main'
@@ -58,14 +57,14 @@ jobs:
           python-version: 3.x
       
       # Install dependencies
-      - name: Install dependencies
+      - name: "Install dependencies"
         run: |
           python -m pip install --upgrade pip
           make check-packages
       
       # Increment the version number in the VERSION file and set the VERSION
       # environment variable
-      - name: Increment version number
+      - name: "Increment version number"
          run: |
           make update-version
           echo "::set-output name=VERSION::$(cat VERSION)"
@@ -116,7 +115,7 @@ jobs:
       
       # Increment the version number in the VERSION file and set the VERSION
       # environment variable
-      - name: Increment version number
+      - name: "Increment version number"
          run: |
           make update-version
           echo "::set-output name=VERSION::$(cat VERSION)"
