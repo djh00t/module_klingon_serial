@@ -4,6 +4,7 @@ import uuid
 import platform
 from .strtobool import strtobool
 
+
 def get_debug():
     """Get debug mode from environment.
 
