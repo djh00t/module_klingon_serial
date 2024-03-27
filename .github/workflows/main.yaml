@@ -65,9 +65,14 @@ jobs:
       # Increment the version number in the VERSION file and set the VERSION
       # environment variable
       - name: Increment version number
+        id: version
+        id: version
         run: |
           make update-version
-          export VERSION=$(cat VERSION)
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+          echo "::set-output name=VERSION::$(cat VERSION)"
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+          echo "::set-output name=VERSION::$(cat VERSION)"
 
       # Builds the package and runs tests
       - name: Build and test
@@ -116,9 +121,14 @@ jobs:
       # Increment the version number in the VERSION file and set the VERSION
       # environment variable
       - name: Increment version number
+        id: version
+        id: version
         run: |
           make update-version
-          export VERSION=$(cat VERSION)
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+          echo "::set-output name=VERSION::$(cat VERSION)"
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+          echo "::set-output name=VERSION::$(cat VERSION)"
 
       # Builds the package and runs tests
       - name: Build and test
