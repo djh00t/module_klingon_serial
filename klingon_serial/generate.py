@@ -1,6 +1,6 @@
 import uuid
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from .strtobool import strtobool
 from .utils import get_debug, get_mac_address_and_interface
 
@@ -31,7 +31,7 @@ def get_millisecond_epoch_hex():
     Returns:
         str: The epoch time in milliseconds as a fixed-length hexadecimal string, padded to 11 characters.
     """
-    epoch = int(datetime.utcnow().timestamp() * 1000)
+    epoch = int(datetime.now(timezone.utc).timestamp() * 1000)
     epoch_hex = hex(epoch)[2:]
     return epoch_hex.zfill(11)
 
@@ -55,8 +55,7 @@ if debug:
     print("MAC Address (int):       ",uuid.getnode())
     print("MAC Address (hex):       ",get_mac_address_hex())
     print("Process ID (hex):        ",get_process_id())
-    print("Epoch datetime (ms):     ",int(datetime.utcnow().timestamp() * 1000))
+    print("Epoch datetime (ms):     ",int(datetime.now(timezone.utc).timestamp() * 1000))
     print("Epoch datetime (hex):    ",get_millisecond_epoch_hex())
     print("Generated Serial:        ",generate_serial())
     print("Serial Length:           ",len(generate_serial()))
-
