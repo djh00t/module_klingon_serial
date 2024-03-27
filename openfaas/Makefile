@@ -9,8 +9,6 @@ build:
 		docker buildx create --name multi-arch-builder --use; \
 	fi
 	docker build --tag $(IMAGE_NAME):$(VERSION) .
-	# Remove any previous versions of the image
-	docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q) || true
 	# Remove any hanging containers that might have been left from previous tests
 	docker container rm -f $$(docker ps -a --filter "name=klingon-serial-test" -q) || true
 	# Run the Docker image to ensure it starts correctly
@@ -23,6 +21,8 @@ build:
 			echo "Container started successfully, pushing to Docker Hub..."; \
 			docker push $(IMAGE_NAME):$(VERSION); \
 			docker push $(IMAGE_NAME):latest; \
+			# Remove any previous versions of the image
+			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(docker images --filter=reference="$(IMAGE_NAME):$(VERSION)" -q)) || true
 		else \
 			echo "Health check failed, not pushing to Docker Hub."; \
 			exit 1; \
