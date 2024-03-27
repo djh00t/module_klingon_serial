@@ -37,12 +37,13 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a job called "build-test" and "build-production"
+jobs:
   build-test:
     if: github.event_name == 'pull_request' && github.base_ref == 'main'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    # Removed incorrect env variable reference
     env:
-      VERSION: ${{ steps.version.outputs.VERSION }}
       BRANCH: ${{ github.ref }}
       GITHUB_USERNAME: ${{ github.actor }}
 
@@ -93,8 +94,8 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    # Removed incorrect env variable reference
     env:
-      VERSION: ${{ steps.version.outputs.VERSION }}
       BRANCH: ${{ github.ref }}
       GITHUB_USERNAME: ${{ github.actor }}
 
