@@ -13,5 +13,7 @@ test:
 clean:
 	docker system prune -f
 	docker image prune -af
+	find . -type f -name '*.pyc' -delete
+	find . -type d -name '__pycache__' -delete
 
 .PHONY: build test clean
