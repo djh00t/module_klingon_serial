@@ -67,7 +67,7 @@ jobs:
       - name: "Increment version number"
         run: |
           make update-version
-          echo "::set-output name=VERSION::$(cat VERSION)"
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       # Builds the package and runs tests
       - name: Build and test
@@ -118,7 +118,7 @@ jobs:
       - name: "Increment version number"
         run: |
           make update-version
-          echo "::set-output name=VERSION::$(cat VERSION)"
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       # Builds the package and runs tests
       - name: Build and test
@@ -145,4 +145,4 @@ jobs:
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'github-actions@github.com'
-          git diff --quiet VERSION || (git add VERSION && git commit -m "Update version number - $VERSION" && git push) || echo "VERSION file not updated"
+          git diff --quiet VERSION || (git add VERSION && git commit -m "Update version number - ${{ env.VERSION }}" && git push) || echo "VERSION file not updated"
