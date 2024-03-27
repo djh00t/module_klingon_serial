@@ -19,13 +19,13 @@ def test_root_accept_json():
 def test_root_accept_plain_text():
     response = client.get("/", headers={"Accept": "text/plain"})
     assert response.status_code == 200
-    assert response.headers['content-type'] == 'text/plain'
+    assert response.headers['content-type'] == 'text/plain; charset=utf-8'
     assert len(response.text) > 0
 
 def test_root_accept_html():
     response = client.get("/", headers={"Accept": "text/html"})
     assert response.status_code == 200
-    assert response.headers['content-type'] == 'text/html'
+    assert response.headers['content-type'] == 'text/html; charset=utf-8'
     assert '<p>' in response.text
 
 def test_root_accept_xml():
@@ -37,7 +37,7 @@ def test_root_accept_xml():
 def test_root_accept_xhtml():
     response = client.get("/", headers={"Accept": "application/xhtml+xml"})
     assert response.status_code == 200
-    assert response.headers['content-type'] == 'text/html'
+    assert response.headers['content-type'] == 'text/html; charset=utf-8'
     assert '<p>' in response.text
 
 def test_root_invalid_accept_header():

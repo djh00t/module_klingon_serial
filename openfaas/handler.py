@@ -51,7 +51,6 @@ async def root(accept: Optional[str] = Header(None)):
             xhtml_content = f'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Serial Number</title></head><body><p>{unique_serial}</p></body></html>'
             return HTMLResponse(content=xhtml_content)
         else:
-            accepted_formats = "application/json, text/plain, text/html, application/xml, text/xml, application/xhtml+xml"
             error_data = {
                 "error": "Unsupported Accept header",
                 "accepted_formats": [
@@ -64,7 +63,7 @@ async def root(accept: Optional[str] = Header(None)):
                 ]
             }
             return JSONResponse(content=error_data, status_code=406)
-    # Default to JSON response
+    # Default to JSON response if no Accept header is provided or if it's not recognized
     return JSONResponse(content=data)
 
 if __name__ == "__main__":
