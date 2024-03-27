@@ -28,6 +28,8 @@ The function is accessible via HTTP and generates a unique serial number upon ea
     - `application/html`
     - `application/xhtml+xml`
     - `application/yaml`
+ - `/docs`: The Swagger UI documentation for the function.
+ - `/favicon.ico`: An endpoint to serve the favicon.
  - `/health`: A health check endpoint that returns a 200 OK status code if the
    function is running.
  - `docs`: The Swagger UI documentation for the function.
