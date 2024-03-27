@@ -10,10 +10,10 @@ different content types.
 It can be run standalone using Uvicorn for local development and testing purposes.
 """
 
-from fastapi import FastAPI, Header, Query
+from fastapi import FastAPI, Header, Query, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, Response
 from klingon_serial import generate_serial
-from starlette.responses import Response
+from starlette.responses import Response as StarletteResponse
 from typing import Optional
 import uvicorn
 
@@ -39,46 +39,30 @@ async def favicon():
 
 
 @app.get("/")
-async def root(response_format: Optional[str] = Query(None, alias='format')):
+async def root(accept: Optional[str] = Header(None)):
     # Root endpoint that generates and returns a unique serial number in the requested format.
     # The Accept header determines the response content type: JSON, plain text, HTML, XML, or XHTML.
     # If the Accept header is not supported, it returns a 406 Not Acceptable with an error message.
     unique_serial = generate_serial().upper()
     data = {"serial": unique_serial}
-    if response_format:
-        if response_format == "json":
+    if accept:
+        if "application/json" in accept:
             return JSONResponse(content=data)
-        elif response_format == "text":
+        elif "text/plain" in accept:
             return PlainTextResponse(unique_serial)
-        elif response_format == "html":
+        elif "text/html" in accept:
             html_content = f'<html><body><p>{unique_serial}</p></body></html>'
             return HTMLResponse(content=html_content)
-        elif response_format == "xml":
+        elif "application/xml" in accept:
             xml_content = f'<root><serial>{unique_serial}</serial></root>'
             return XMLResponse(content=xml_content)
-        elif response_format == "xhtml":
+        elif "application/xhtml+xml" in accept:
             xhtml_content = f'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Serial Number</title></head><body><p>{unique_serial}</p></body></html>'
             return HTMLResponse(content=xhtml_content)
-        elif response_format == "yaml":
+        elif "application/yaml" in accept:
             yaml_content = yaml.dump(data)
             return YAMLResponse(content=yaml_content)
-        else:
-            error_data = {
-                "error": "Unsupported Accept header",
-                "accepted_formats": [
-                    "application/json",
-                    "text/plain",
-                    "text/html",
-                    "application/xml",
-                    "text/xml",
-                    "application/xhtml+xml",
-                    "application/yaml"
-                    "application/xhtml+xml"
-                ]
-            }
-            return JSONResponse(content=error_data, status_code=406)
-    # Default to JSON response if no Accept header is provided or if it's not recognized
-    return JSONResponse(content=data)
+    raise HTTPException(status_code=406, detail="Unsupported Accept header")
 
 if __name__ == "__main__":
     import pytest
