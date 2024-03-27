@@ -3,7 +3,7 @@
 """
 
 import pytest
-from klingon_serial.generate_serial import generate_serial, get_mac_address_hex, get_process_id, get_millisecond_epoch_hex
+from klingon_serial.generate import generate_serial, get_mac_address_hex, get_process_id, get_millisecond_epoch_hex
 
 def test_get_mac_address_hex():
     """Test that the `get_mac_address_hex()` function returns a valid MAC address hex string."""

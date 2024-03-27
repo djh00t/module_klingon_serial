@@ -1,6 +1,3 @@
-###
-### klingon_serial setup.py
-### 
 from setuptools import setup, find_packages
 
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -10,7 +7,7 @@ with open("VERSION", "r") as version_file:
     version = version_file.read().strip()
 
 setup(
-    name='klingon_serial',
+    name='klingon-serial',
     version=version,
     packages=find_packages(),
     author='David Hooton',
@@ -21,11 +18,9 @@ setup(
     url='https://github.com/djh00t/module_klingon_serial',
     include_package_data=True,
     install_requires=[
-        'datetime',
         'psutil',
-        'pytest',
-        'uuid',
-        'setuptools'
+        'pytest>=6.0',  # Specify the minimum version required
+        'str2bool',
     ],
     entry_points={
         'console_scripts': [
@@ -37,5 +32,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    license='MIT',  # Add the license field
+    python_requires='>=3.9',
 )

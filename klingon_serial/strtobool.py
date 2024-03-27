@@ -1,22 +1,11 @@
+from distutils.util import strtobool as str2bool
+
 def strtobool(val):
-    """Convert a string representation of truth to true (1) or false (0).
+    """Convert a string representation of truth to true (True) or false (False).
 
     True values are 'y', 'yes', 't', 'true', 'on', and '1'.
     False values are 'n', 'no', 'f', 'false', 'off', and '0'.
 
-    Args:
-        val (str): The string representation of truth value.
-
-    Returns:
-        int: 1 if the value is true, 0 if the value is false.
-
-    Raises:
-        ValueError: If the value is not a valid truth value.
+    This function is a wrapper around str2bool for compatibility.
     """
-    val = val.lower()
-    if val in ('y', 'yes', 't', 'true', 'on', '1'):
-        return 1
-    elif val in ('n', 'no', 'f', 'false', 'off', '0'):
-        return 0
-    else:
-        raise ValueError("Invalid truth value %r" % (val,))
+    return str2bool(val)

@@ -13,7 +13,7 @@ module aims to offer a robust method for generating serials that are virtually c
 To install the module, you can use `pip`:
 
 ```bash
-pip install klingon_serial
+pip install klingon-serial
 ```
 
 ## Serial Components
@@ -32,7 +32,7 @@ Here is how you can use the `klingon_serial` module:
 import klingon_serial
 
 # Generate a unique serial number
-unique_serial = klingon_serial.generate_serial()
+unique_serial = klingon_serial.generate()
 print(f"Generated Serial: {unique_serial}")
 ```
 
@@ -57,7 +57,7 @@ An example serial number might look like this:
 To run the test suite, you can use:
 
 ```bash
-python -m unittest tests/test_klingon_serial.py
+python -m unittest discover -s tests
 ```
 
 ## Contributing
