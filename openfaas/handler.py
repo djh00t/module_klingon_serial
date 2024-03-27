@@ -1,4 +1,4 @@
-from klingon_serial import generate_serial
+from ..klingon_serial import generate_serial
 
 def main(context=None, event=None):
     # Generate a unique serial number
