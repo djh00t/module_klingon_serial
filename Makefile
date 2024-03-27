@@ -9,10 +9,11 @@ PYTHON = python
 PIP = pip
 PYTEST = pytest
 TWINE = twine
+APP = klingon_serial
 
 # Clean up build files
 clean:
-	$(RM) -r build dist *.egg-info .mypy_cache .pytest_cache */__pycache__ *.zip *.gz *.whl */*.zip */*.gz */*.whl
+	$(RM) -r build dist *.egg-info .mypy_cache .pytest_cache __pycache__ */__pycache__ *.zip *.gz *.whl */*.zip */*.gz */*.whl
 
 ## check-packages: Check for required pip packages and requirements.txt, install if missing
 check-packages:
@@ -50,7 +51,7 @@ install:
 
 ## uninstall: Uninstall the local package
 uninstall:
-	$(PIP) uninstall get-user-agent
+	$(PIP) uninstall $(APP)
 
 # Run tests
 test:
@@ -71,6 +72,5 @@ generate-pyproject:
 	echo "requires = ['setuptools', 'wheel']" >> pyproject.toml
 	echo "build-backend = 'setuptools.build_meta'" >> pyproject.toml
 
-.PHONY: clean check-packages sdist wheel upload-test upload install uninstall test update-version generate-pyproject
 .DEFAULT_GOAL := test
 .PHONY: clean check-packages sdist wheel upload-test upload install uninstall test update-version generate-pyproject

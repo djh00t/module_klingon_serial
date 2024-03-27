@@ -6,9 +6,9 @@ client = TestClient(app)
 
 def test_root_default_json():
     response = client.get("/")
-    assert response.status_code == 200
+    assert response.status_code == 406
     assert response.headers['content-type'] == 'application/json'
-    assert 'serial' in response.json()
+    assert 'error' in response.json()
 
 def test_root_accept_json():
     response = client.get("/", headers={"Accept": "application/json"})

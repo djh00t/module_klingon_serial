@@ -4,7 +4,6 @@ IMAGE_NAME := djh00t/klingon-serial
 
 build:
 	@echo "Building Docker image with version $(VERSION)"
-	# Build multi-platform images faster with Docker Build Cloud: https://docs.docker.com/go/docker-build-cloud
 	@if ! docker buildx inspect multi-arch-builder > /dev/null 2>&1; then \
 		docker buildx create --name multi-arch-builder --use; \
 	fi
