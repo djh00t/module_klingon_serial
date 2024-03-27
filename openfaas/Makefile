@@ -18,4 +18,8 @@ clean:
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
 
+.PHONY: build test clean run
+
+run:
+	uvicorn openfaas.handler:app --host 0.0.0.0 --port 8000
 .PHONY: build test clean
