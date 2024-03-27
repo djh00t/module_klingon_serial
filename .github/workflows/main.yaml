@@ -86,7 +86,7 @@ jobs:
       - name: Pull from TestPyPI and test
         run: |
           pip install --index-url https://test.pypi.org/simple/ klingon-serial
-          python -m unittest discover
+          python -m pytest -v tests/  
 
   build-production:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.pull_request.merged == true
@@ -137,7 +137,7 @@ jobs:
       - name: Pull from PyPI and test
         run: |
           pip install klingon-serial
-          python -m unittest discover
+          python -m pytest -v tests/  
 
       # If uploads are successful, and the VERSION file has changed push the
       # updated VERSION file back to the repository
