@@ -19,7 +19,6 @@ setup(
     include_package_data=True,
     install_requires=[
         'psutil',
-        'pytest',
         'pytest>=6.0',  # Specify the minimum version required
     ],
     entry_points={

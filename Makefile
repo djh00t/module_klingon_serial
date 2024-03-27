@@ -60,9 +60,9 @@ test:
 ## update-version: Read the version number from VERSION file, it will look like A.B.C Increment the third (C) number by 1 and write it back to the VERSION file
 update-version:
 	echo "Updating version number..."
-	NEW_VERSION=$(shell awk -F. '{print $$1"."$$2"."$$3+1}' VERSION); \
+	NEW_VERSION=$$(awk -F. '{print $$1"."$$2"."$$3+1}' VERSION); \
 	echo $$NEW_VERSION > VERSION; \
-	sed -i "s/version='[0-9]*\.[0-9]*\.[0-9]*'/version='$$NEW_VERSION'/g" setup.py; \
+	sed -i'' -e "s/version='[0-9]*\.[0-9]*\.[0-9]*'/version='$$NEW_VERSION'/g" setup.py; \
 	echo "New version number is $$NEW_VERSION"
 
 ## generate-pyproject: Generate a pyproject.toml file

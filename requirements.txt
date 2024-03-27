@@ -2,6 +2,3 @@ psutil
 pytest
 uuid
 setuptools
-# fastapi
-# uvicorn
-# netifaces
