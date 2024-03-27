@@ -9,6 +9,8 @@ build:
 		docker buildx create --name multi-arch-builder --use; \
 	fi
 	docker build --tag $(IMAGE_NAME):$(VERSION) .
+	# Remove any previous versions of the image
+	docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q) || true
 	# Run the Docker image to ensure it starts correctly
 	docker run -d --name klingon-serial-test -p 8080:8080 $(IMAGE_NAME):$(VERSION)
 	# Wait for a few seconds to give the container time to start
