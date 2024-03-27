@@ -1,3 +1,9 @@
+"""
+This module provides a utility function to convert string representations of
+boolean values to actual boolean (True or False) values.
+"""
+from distutils.util import strtobool as distutils_strtobool
+
 def strtobool(val):
     """Convert a string representation of truth to true (1) or false (0).
 
