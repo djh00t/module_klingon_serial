@@ -11,11 +11,10 @@ setup(
     version=version,
     packages=find_packages(),
     author='David Hooton',
-    author_email='support@hooton.org',  # Replace with a generic email if available
+    author_email='klingon_serial+david@hooton.org',
     description='Get a globally unique serial',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/djh00t/module_klingon_serial',  # Verify this is correct
     url='https://github.com/djh00t/module_klingon_serial',
     include_package_data=True,
     install_requires=[
@@ -34,6 +33,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     license='MIT',  # Add the license field
-    python_requires='>=3.6',
-)
+    python_requires='>=3.9',
 )
