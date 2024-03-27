@@ -27,11 +27,6 @@ on:
       - main
     paths:
       - '**'
-    paths-ignore:
-      - 'VERSION'
-      - 'fission/**'
-      - 'openfaas/**'
-      - 'functions/**'
   pull_request:
     branches-ignore:
       - main
