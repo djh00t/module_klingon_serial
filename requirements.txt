@@ -2,3 +2,4 @@ psutil
 pytest
 uuid
 str2bool
+setuptools
