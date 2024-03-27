@@ -72,7 +72,8 @@ async def root():
     unique_serial = generate_serial().upper()
     data = {"serial": unique_serial}
     # Check if 'Accept' is provided as a query parameter and override the header value
-    if accept:
+    accept_header = accept or ""
+    if accept_header:
         if "application/json" in accept:
             return JSONResponse(content=data)
         elif "text/plain" in accept:
