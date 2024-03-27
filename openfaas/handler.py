@@ -17,9 +17,13 @@ from starlette.responses import Response
 from typing import Optional
 import uvicorn
 
+import yaml
 
 class XMLResponse(Response):
     media_type = "application/xml"
+
+class YAMLResponse(Response):
+    media_type = "application/yaml"
 
 app = FastAPI()
 
@@ -55,6 +59,9 @@ async def root(accept: Optional[str] = Header(None)):
         elif "application/xhtml+xml" in accept:
             xhtml_content = f'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Serial Number</title></head><body><p>{unique_serial}</p></body></html>'
             return HTMLResponse(content=xhtml_content)
+        elif "application/yaml" in accept:
+            yaml_content = yaml.dump(data)
+            return YAMLResponse(content=yaml_content)
         else:
             error_data = {
                 "error": "Unsupported Accept header",
@@ -64,6 +71,8 @@ async def root(accept: Optional[str] = Header(None)):
                     "text/html",
                     "application/xml",
                     "text/xml",
+                    "application/xhtml+xml",
+                    "application/yaml"
                     "application/xhtml+xml"
                 ]
             }
