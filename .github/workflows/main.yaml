@@ -90,7 +90,8 @@ jobs:
 
   increment-version:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/main'
+    # if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
     needs: [build-test]
     steps:
       - name: Checkout repository
