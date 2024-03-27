@@ -65,7 +65,7 @@ jobs:
       # Increment the version number in the VERSION file and set the VERSION
       # environment variable
       - name: "Increment version number"
-         run: |
+        run: |
           make update-version
           echo "::set-output name=VERSION::$(cat VERSION)"
 
@@ -116,7 +116,7 @@ jobs:
       # Increment the version number in the VERSION file and set the VERSION
       # environment variable
       - name: "Increment version number"
-         run: |
+        run: |
           make update-version
           echo "::set-output name=VERSION::$(cat VERSION)"
 
