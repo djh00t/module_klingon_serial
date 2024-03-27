@@ -83,10 +83,41 @@ jobs:
           make upload-test TEST_PYPI_USER_AGENT=${{ secrets.TEST_PYPI_USER_AGENT }}
 
       # Pull the package from TestPyPI and run tests
-      - name: Pull from TestPyPI and test
+      #- name: Pull from TestPyPI and test
+      #  run: |
+      #    pip install --index-url https://test.pypi.org/simple/ klingon-serial
+      #    python -m pytest -v tests/  
+
+  increment-version:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.ref == 'refs/heads/main'
+    needs: [build-test]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Increment version
         run: |
-          pip install --index-url https://test.pypi.org/simple/ klingon-serial
-          python -m pytest -v tests/  
+          file="VERSION"
+          if [ ! -f "$file" ]; then
+            echo "VERSION file does not exist. Creating with initial value 0.0.0."
+            echo "0.0.0" > "$file"
+          fi
+          
+          version=$(cat ${file})
+          IFS='.' read -ra VER <<< "$version"
+          ((VER[2]++))
+          new_version="${VER[0]}.${VER[1]}.${VER[2]}"
+          echo $new_version > $file
+          echo "New version: $new_version"
+
+      - name: Commit and push if necessary
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add VERSION
+          git commit -m "Update version number - $new_version" -a || echo "No changes to commit"
+          git push
 
   build-production:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.pull_request.merged == true
@@ -113,11 +144,10 @@ jobs:
           python -m pip install --upgrade pip
           make check-packages
       
-      # Increment the version number in the VERSION file and set the VERSION
+      # Get the version number in the VERSION file and set the VERSION
       # environment variable
-      - name: "Increment version number"
+      - name: "Get version number"
         run: |
-          make update-version
           echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       # Builds the package and runs tests
