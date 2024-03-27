@@ -38,12 +38,6 @@ response_types = {  # Define the possible response types and their descriptions
 
 @app.get("/health")
 async def health():
-    ...
-
-@app.get("/favicon.ico")
-async def favicon():
-    ...
-    # Health check endpoint; returns a 200 OK response to indicate the service is up and running.
     return PlainTextResponse("OK", status_code=200)
 
 @app.get("/favicon.ico")
@@ -71,8 +65,7 @@ async def favicon():
         },
     },
 })
-async def root(accept: Optional[str] = Header(None, alias='Accept', include_in_schema=True)):
-    ...
+async def root():
     # Root endpoint that generates and returns a unique serial number in the requested format.
     # The Accept header determines the response content type: JSON, plain text, HTML, XML, or XHTML.
     # If the Accept header is not supported, it returns a 406 Not Acceptable with an error message.
