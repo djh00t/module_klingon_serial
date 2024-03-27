@@ -12,7 +12,7 @@ It can be run standalone using Uvicorn for local development and testing purpose
 
 from fastapi import FastAPI, Header, Query, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, Response
-from klingon_serial import generate_serial
+from klingon_serial.generate import generate_serial
 from starlette.responses import Response as StarletteResponse
 from typing import Optional
 import uvicorn
