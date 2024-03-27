@@ -10,7 +10,10 @@ build:
 	fi
 	docker build --tag $(IMAGE_NAME):$(VERSION) .
 	# Remove any hanging containers that might have been left from previous tests
-	docker container rm -f $$(docker ps -a --filter "name=klingon-serial-test" -q) || true
+	CONTAINERS=$$(docker ps -a --filter "name=klingon-serial-test" -q); \
+	if [ -n "$$CONTAINERS" ]; then \
+		docker container rm -f $$CONTAINERS; \
+	fi
 	# Run the Docker image to ensure it starts correctly
 	docker run -d --name klingon-serial-test -p 8080:8080 $(IMAGE_NAME):$(VERSION)
 	# Wait for a few seconds to give the container time to start
@@ -23,6 +26,10 @@ build:
 			docker push $(IMAGE_NAME):latest; \
 			# Remove any previous versions of the image
 			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(docker images --filter=reference="$(IMAGE_NAME):$(VERSION)" -q)) || true; \
+			IMAGES=$$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(docker images --filter=reference="$(IMAGE_NAME):$(VERSION)" -q)); \
+			if [ -n "$$IMAGES" ]; then \
+				docker image rm -f $$IMAGES; \
+			fi; \
 		else \
 			echo "Health check failed, not pushing to Docker Hub."; \
 			exit 1; \
