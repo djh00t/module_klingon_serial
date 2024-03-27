@@ -80,7 +80,7 @@ jobs:
       # If tests pass, push the package to TestPyPI
       - name: Push to TestPyPI
         run: |
-          make upload-test TEST_PYPI_USER_AGENT=${{ secrets.TEST_PYPI_USER_AGENT }}
+          make upload-test TEST_PYPI_USER_AGENT=${{ secrets.TEST_PYPI_USER_AGENT }} || echo "Push to TestPyPI failed, but the workflow continues."
 
       # Pull the package from TestPyPI and run tests
       #- name: Pull from TestPyPI and test
