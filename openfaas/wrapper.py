@@ -4,15 +4,17 @@ from typing import Optional
 import uvicorn
 
 app = FastAPI()
+from klingon_serial import generate_serial
 
 @app.get("/")
 async def root(accept: Optional[str] = Header(None)):
-    data = {"message": "Hello, World"}
+    unique_serial = generate_serial().upper()
+    data = {"serial": unique_serial}
     if accept:
         if "text/plain" in accept:
-            return PlainTextResponse(str(data))
+            return PlainTextResponse(unique_serial)
         elif "application/xml" in accept or "text/xml" in accept:
-            xml_content = f'<root><message>{data["message"]}</message></root>'
+            xml_content = f'<root><serial>{unique_serial}</serial></root>'
             return XMLResponse(content=xml_content)
     # Default to JSON response
     return JSONResponse(content=data)
