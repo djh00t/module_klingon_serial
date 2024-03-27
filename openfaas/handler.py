@@ -69,7 +69,7 @@ async def root(accept: Optional[str] = Header(None)):
 if __name__ == "__main__":
     import pytest
     # Run the pytest suite before starting the server
-    test_exit_code = pytest.main()
+    test_exit_code = pytest.main(['-v'])
     if test_exit_code != 0:
         # If tests fail, exit with the test exit code
         import sys
