@@ -36,6 +36,18 @@ async def root(accept: Optional[str] = Header(None)):
         else:
             accepted_formats = "application/json, text/plain, text/html, application/xml, text/xml, application/xhtml+xml"
             return Response(content=f"Accept header must be one of: {accepted_formats}", media_type="text/plain", status_code=406)
+            error_data = {
+                "error": "Unsupported Accept header",
+                "accepted_formats": [
+                    "application/json",
+                    "text/plain",
+                    "text/html",
+                    "application/xml",
+                    "text/xml",
+                    "application/xhtml+xml"
+                ]
+            }
+            return JSONResponse(content=error_data, status_code=406)
     # Default to JSON response
     return JSONResponse(content=data)
 
