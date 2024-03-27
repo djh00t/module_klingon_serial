@@ -20,6 +20,7 @@ setup(
     install_requires=[
         'psutil',
         'pytest>=6.0',  # Specify the minimum version required
+        'str2bool',
     ],
     entry_points={
         'console_scripts': [

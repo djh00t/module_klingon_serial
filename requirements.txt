@@ -1,4 +1,4 @@
 psutil
 pytest
 uuid
-setuptools
+str2bool
