@@ -4,6 +4,9 @@ WORKDIR /app
 
 RUN apk add --no-cache gcc musl-dev linux-headers build-base libffi-dev
 
+
+RUN pip install --no-cache-dir Cython
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
