@@ -24,7 +24,7 @@ on:
   # branch and not for VERSION file changes
   push:
     branches: [ main ]
-    paths-ignore: [ "VERSION", "fission/" ]
+    paths-ignore: [ "VERSION", "fission/", "openfaas", "functions" ]
   pull_request:
     branches: [ main ]
 
