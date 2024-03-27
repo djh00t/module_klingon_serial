@@ -2,7 +2,7 @@ FROM python:3.12
 
 WORKDIR /app
 
-RUN apk add --no-cache gcc musl-dev linux-headers
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev linux-headers-amd64
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir --only-binary=:all: -r requirements.txt
