@@ -19,7 +19,7 @@ def get_debug():
     if debug is None:
         return False
     try:
-        return strtobool(debug) == 1
+        return bool(strtobool(debug))
     except ValueError:
         return False
 

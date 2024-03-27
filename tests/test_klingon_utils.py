@@ -12,7 +12,7 @@ def test_get_debug_env_set():
     """Test that the `get_debug()` function returns True if the `DEBUG` environment variable is set to a truthy value."""
 
     os.environ['DEBUG'] = 'True'
-    assert get_debug() is True
+    assert get_debug() == True
 
 
 def test_get_debug_env_not_set():
@@ -26,7 +26,7 @@ def test_get_debug_invalid_value():
     """Test that the `get_debug()` function returns False if the `DEBUG` environment variable is set to an invalid value."""
 
     os.environ['DEBUG'] = 'invalid'
-    assert get_debug() is False
+    assert get_debug() == False
 
 
 def test_get_mac_address_and_interface_valid():
