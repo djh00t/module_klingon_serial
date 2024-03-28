@@ -1,0 +1,71 @@
+name: Post-PR Merge CI
+
+# Controls when the action will run. 
+on:
+  push: 
+    branches:
+      - main
+
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          file="VERSION"
+          if [ ! -f "$file" ]; then
+            echo "VERSION file does not exist. Creating with initial value 0.0.0."
+            echo "0.0.0" > "$file"
+          fi
+          version=$(cat ${file})
+          IFS='.' read -ra VER <<< "$version"
+          ((VER[2]++))
+          new_version="${VER[0]}.${VER[1]}.${VER[2]}"
+          echo $new_version > $file
+          echo "New version: $new_version"
+      - run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add VERSION
+          git commit -m "Update version number - $new_version" -a || echo "No changes to commit"
+          git push
+
+  build-production:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    env:
+      BRANCH: ${{ github.ref }}
+      GITHUB_USERNAME: ${{ github.actor }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          make check-packages
+      - name: "Get version number"
+        run: |
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Build and test
+        run: |
+          pip install .
+          make sdist
+          make wheel
+          make test
+      - name: Push to PyPI
+        run: |
+          make upload PYPI_USER_AGENT=${{ secrets.PYPI_USER_AGENT }}
+      - name: Pull from PyPI and test
+        run: |
+          pip install klingon-serial
+          python -m pytest -v tests/  
+      - name: Push updated VERSION to repository
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions@github.com'
+          git diff --quiet VERSION || (git add VERSION && git commit -m "Update version number - ${{ env.VERSION }}" && git push) || echo "VERSION file not updated"
