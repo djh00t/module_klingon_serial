@@ -5,6 +5,10 @@ on:
     # branches to consider in the event; optional, defaults to all
     branches:
       - master
+  workflow_run:
+    workflows: ["Pre-PR Merge CI"]
+    types:
+      - completed
   # pull_request event is required only for autolabeler
   pull_request:
     # Only following types are handled by the action, but one can default to all as well
@@ -18,7 +22,6 @@ permissions:
 
 jobs:
   update_release_draft:
-    needs: pre-pr-merge
     permissions:
       # write permission is required to create a github release
       contents: write
