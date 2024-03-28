@@ -45,8 +45,3 @@ jobs:
           make sdist
           make wheel
           make test
-      - name: Open a pull request to main
-        if: github.ref != 'refs/heads/main'
-        run: |
-          branch_name=$(echo ${GITHUB_REF#refs/heads/})
-          gh pr create --title "Merge $branch_name into main" --body "This is an automated PR to merge changes from $branch_name into main." --base main --head $branch_name --repo ${{ github.repository }}
