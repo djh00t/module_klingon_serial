@@ -45,3 +45,7 @@ jobs:
           make sdist
           make wheel
           make test
+      - name: pull-request
+        uses: diillson/auto-pull-request@latest
+          with:
+            destination_branch: "main"
