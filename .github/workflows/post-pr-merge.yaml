@@ -3,12 +3,10 @@ name: Post-PR Merge CI
 # Controls when the action will run. 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
     types: [closed]
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -46,7 +44,7 @@ jobs:
           git commit -m "Update version number - $new_version" || echo "No changes to commit"
           git checkout -b version-bump
           git push origin version-bump
-          gh pr create --title "Update version number - $new_version" --body "This is an automated PR to update the version number to $new_version" --base main --head version-bump --reviewer <REVIEWER_USERNAME> --label "version-bump"
+          gh pr create --title "Update version number - $new_version" --body "This is an automated PR to update the version number to $new_version" --base main --head version-bump --reviewer ${{ secrets.REVIEWER_USERNAME }} --label "version-bump"
 
   post-pr-merge:
     runs-on: ubuntu-latest
