@@ -49,6 +49,7 @@ test:
 	pytest -v
 
 clean:
+
 	docker system prune -af --volumes
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
