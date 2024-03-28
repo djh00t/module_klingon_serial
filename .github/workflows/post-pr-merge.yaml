@@ -2,14 +2,15 @@ name: Post-PR Merge CI
 
 # Controls when the action will run. 
 on:
-  push: 
+  pull_request:
+    types: [closed]
     branches:
       - main
 
 jobs:
   increment-version:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v2
       - run: |
@@ -33,7 +34,7 @@ jobs:
 
   build-production:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     env:
       BRANCH: ${{ github.ref }}
       GITHUB_USERNAME: ${{ github.actor }}
