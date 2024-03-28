@@ -33,12 +33,12 @@ jobs:
           python -m pip install --upgrade pip
           make check-packages
       - name: "Increment version number"
+        run: |
+          make update-version
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
       - name: Build and test
         run: |
           pip install .
           make sdist
           make wheel
           make test
-      #- name: Push to TestPyPI
-      #  run: |
-      #    make upload-test TEST_PYPI_USER_AGENT=${{ secrets.TEST_PYPI_USER_AGENT }} || echo "Push to TestPyPI failed, but the workflow continues."

@@ -43,7 +43,7 @@ jobs:
           git merge main --no-edit
           git push origin ${{ steps.extract_branch.outputs.source_branch }}
 
-  build-production:
+  post-pr-merge:
     runs-on: ubuntu-latest
     needs: increment-version
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
@@ -51,14 +51,13 @@ jobs:
       BRANCH: ${{ github.ref }}
       GITHUB_USERNAME: ${{ github.actor }}
       VERSION: ${{ needs.increment-version.outputs.new_version }}
-
     steps:
       - name: Push to TestPyPI
+        uses: actions/checkout@v2
         run: |
-          make upload-test TEST_PYPI_USER_AGENT=${{ secrets.TEST_PYPI_USER_AGENT }}
-        env:
-          VERSION: ${{ needs.increment-version.outputs.new_version }}
-      - uses: actions/checkout@v2
+            make upload-test TEST_PYPI_USER_AGENT=${{ secrets.TEST_PYPI_USER_AGENT }}
+          env:
+            VERSION: ${{ needs.increment-version.outputs.new_version }}
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -76,12 +75,3 @@ jobs:
       - name: Push to PyPI
         run: |
           make upload PYPI_USER_AGENT=${{ secrets.PYPI_USER_AGENT }}
-      - name: Pull from PyPI and test
-        run: |
-          pip install klingon-serial
-          python -m pytest -v tests/  
-      - name: Push updated VERSION to repository
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'github-actions@github.com'
-          git diff --quiet VERSION || (git add VERSION && git commit -m "Update version number - ${{ env.VERSION }}" && git push) || echo "VERSION file not updated"
