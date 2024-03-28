@@ -1,4 +1,4 @@
- # OpenFaaS Function: Klingon Serial Generator
+# Klingon Serial Generator
 
 ## Overview
 

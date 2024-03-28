@@ -92,6 +92,7 @@ async def root(accept: Optional[str] = Header(None)):
             return YAMLResponse(content=yaml_content)
     raise HTTPException(status_code=406, detail="Unsupported Accept header")
 
+
 if __name__ == "__main__":
     import pytest
     # Run the pytest suite before starting the server

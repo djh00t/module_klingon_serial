@@ -8,7 +8,7 @@ def test_root_default_json():
     response = client.get("/")
     assert response.status_code == 406
     assert response.headers['content-type'] == 'application/json'
-    assert 'error' in response.json()
+    assert 'detail' in response.json()
 
 def test_root_accept_json():
     response = client.get("/", headers={"Accept": "application/json"})
@@ -44,4 +44,5 @@ def test_root_invalid_accept_header():
     response = client.get("/", headers={"Accept": "application/invalid"})
     assert response.status_code == 406
     assert response.headers['content-type'] == 'application/json'
-    assert 'error' in response.json()
+    assert 'detail' in response.json()
+#    assert 'error' in response.json()

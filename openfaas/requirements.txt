@@ -1,4 +1,5 @@
-fastapi==0.109.1
-uvicorn==0.13.4
+fastapi
+uvicorn
 klingon-serial
- klingon_serial
+psutil
+PyYAML
