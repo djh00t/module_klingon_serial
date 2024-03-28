@@ -2,6 +2,9 @@ name: Post-PR Merge CI
 
 # Controls when the action will run. 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types: [closed]
     branches:
