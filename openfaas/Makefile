@@ -36,8 +36,6 @@ build:
 		exit 1; \
 	fi
 	# Clean up
-	docker stop klingon-serial-test || true
-	docker rm klingon-serial-test || true
 	docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q) || true
 	# Increment version
 	@echo $$(echo $(VERSION) | awk -F. '{ printf "%d.%d.%d", $$1, $$2, $$3+1 }') > $(VERSION_FILE)
