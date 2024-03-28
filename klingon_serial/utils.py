@@ -9,6 +9,18 @@ import platform
 from .strtobool import strtobool
 
 
+def validate_serial(serial):
+    """Validate the generated serial number against the expected format.
+
+    Args:
+        serial (str): The serial number to validate.
+
+    Returns:
+        bool: True if the serial number is valid, False otherwise.
+    """
+    pattern = re.compile(r'^[a-fA-F0-9]{12}[a-fA-F0-9]{5}[a-fA-F0-9]{11}$')
+    return bool(pattern.match(serial))
+
 def get_debug():
     """Get debug mode from environment.
 
