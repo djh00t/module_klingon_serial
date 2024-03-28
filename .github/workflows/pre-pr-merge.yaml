@@ -41,34 +41,3 @@ jobs:
           make sdist
           make wheel
           make test
-      - name: Check for changes
-        id: check_changes
-        run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            DIFF_TARGET="origin/${{ github.base_ref }}..."
-          else
-            DIFF_TARGET="origin/main..."
-          fi
-          if git diff --quiet $DIFF_TARGET -- HEAD; then
-            echo "No changes detected."
-            echo "has_changes=no" >> $GITHUB_ENV
-          else
-            echo "Changes detected."
-            echo "has_changes=yes" >> $GITHUB_ENV
-          fi
-      - name: Update PR with changelog
-        if: github.event_name == 'pull_request' && steps.check_changes.outputs.has_changes == 'yes'
-        uses: metcalfc/changelog-generator@v2.0.0
-        with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
-          prTitle: "Changelog for recent changes"
-          prBody: "Changes included in this PR:\n$CHANGES"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Draft release notes
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-config.yaml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
