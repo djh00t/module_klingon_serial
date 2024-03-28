@@ -45,11 +45,11 @@ jobs:
         id: check_changes
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            DIFF_TARGET="origin/${{ github.base_ref }}"
+            DIFF_TARGET="origin/${{ github.base_ref }}..."
           else
-            DIFF_TARGET="origin/main"
+            DIFF_TARGET="origin/main..."
           fi
-          if git diff --quiet $DIFF_TARGET...HEAD; then
+          if git diff --quiet $DIFF_TARGET -- HEAD; then
             echo "No changes detected."
             echo "has_changes=no" >> $GITHUB_ENV
           else
