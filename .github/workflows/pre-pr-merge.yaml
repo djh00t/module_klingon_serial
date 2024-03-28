@@ -44,7 +44,12 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if git diff --quiet origin/${{ github.base_ref }}...HEAD; then
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            DIFF_TARGET="origin/${{ github.base_ref }}"
+          else
+            DIFF_TARGET="origin/main"
+          fi
+          if git diff --quiet $DIFF_TARGET...HEAD; then
             echo "No changes detected."
             echo "has_changes=no" >> $GITHUB_ENV
           else
@@ -53,12 +58,13 @@ jobs:
           fi
       - name: pull-request
         if: env.has_changes == 'yes'
-        uses: diillson/auto-pull-request@latest
+        uses: repo-sync/pull-request@v2
         with:
           destination_branch: "main"
           pr_label: "auto-pr"                               # Comma-separated list (no spaces)
           pr_draft: true                                    # Creates pull request as draft
           pr_allow_empty: true                              # Creates pull request even if there are no changes
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: output-url
         run: echo ${{steps.open-pr.outputs.pr_url}}
       - name: output-number
