@@ -20,15 +20,20 @@ build:
 	# Run image for testing
 	docker run -d --name klingon-serial-test -p 8080:8080 $(IMAGE_NAME):$(VERSION)
 	sleep 5
-	# Health check and push if successful
-	if docker ps | grep -q klingon-serial-test; then \
-		if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health | grep -q 200; then \
+	# Health check, test endpoints, validate serial, and push if successful
+	if docker ps | grep -q klingon-serial-test; then
+		HEALTH_CHECK=$$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health)
+		SERIAL_RESPONSE=$$(curl -s -H "Accept: application/json" http://localhost:8080/)
+		SERIAL=$$(echo $$SERIAL_RESPONSE | jq -r '.serial')
+		VALIDATE_SERIAL_CMD="from klingon_serial.generate import validate_serial; import sys; sys.exit(0 if validate_serial('$$SERIAL') else 1)"
+		if [ "$$HEALTH_CHECK" -eq 200 ] && python -c "$$VALIDATE_SERIAL_CMD"; then \
 			echo "Container started successfully, pushing to Docker Hub..."; \
 			docker push $(IMAGE_NAME):$(VERSION); \
 			docker push $(IMAGE_NAME):latest; \
 			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(IMAGE_NAME):$(VERSION)) || true; \
 		else \
 			echo "Health check failed, not pushing to Docker Hub."; \
+			echo "Health check or serial validation failed, not pushing to Docker Hub."; \
 			exit 1; \
 		fi; \
 	else \
