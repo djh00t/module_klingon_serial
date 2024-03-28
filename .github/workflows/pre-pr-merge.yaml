@@ -33,9 +33,6 @@ jobs:
           python -m pip install --upgrade pip
           make check-packages
       - name: "Increment version number"
-        run: |
-          make update-version
-          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
       - name: Build and test
         run: |
           pip install .
