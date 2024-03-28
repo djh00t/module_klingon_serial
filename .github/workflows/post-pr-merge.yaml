@@ -31,7 +31,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh auth login --with-token < <(echo "${GITHUB_TOKEN}")
+          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
       - name: Increment version number
         id: versioning
         run: |
@@ -71,7 +71,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh auth login --with-token < <(echo "${GITHUB_TOKEN}")
+          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
