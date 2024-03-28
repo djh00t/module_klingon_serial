@@ -1,5 +1,5 @@
 # Klingon Serial Python Module
-[![CI](https://github.com/djh00t/module_klingon_serial/actions/workflows/main.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/main.yaml)
+[![Pre-PR Merge CI](https://github.com/djh00t/module_klingon_serial/actions/workflows/pre-pr-merge.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/pre-pr-merge.yaml) [![.github/workflows/post-pr-merge.yaml](https://github.com/djh00t/module_klingon_serial/actions/workflows/post-pr-merge.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/post-pr-merge.yaml)
 ## Overview
 
 The `klingon_serial` Python module is designed to generate a unique hexadecimal
