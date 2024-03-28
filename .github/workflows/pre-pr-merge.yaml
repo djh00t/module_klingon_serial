@@ -4,7 +4,7 @@ name: Pre-PR Merge CI
 on:
   push: 
     branches:
-      - '*'
+      - '!main'
     tags:
       - '*'
     paths:

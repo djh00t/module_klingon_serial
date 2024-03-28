@@ -3,12 +3,10 @@ name: Post-PR Merge CI
 # Controls when the action will run. 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
     types: [closed]
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
