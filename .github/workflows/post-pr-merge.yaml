@@ -13,6 +13,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     outputs:
       source_branch: ${{ steps.extract_branch.outputs.source_branch }}
+      new_version: ${{ steps.versioning.outputs.new_version }}
     steps:
       - uses: actions/checkout@v2
       - name: Extract source branch name
@@ -34,8 +35,9 @@ jobs:
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
           git add VERSION
-          git commit -m "Update version number - $new_version" -a || echo "No changes to commit"
+          git commit -m "Update version number - $new_version" || echo "No changes to commit"
           git push
+        id: versioning
       - name: Push VERSION to the source branch
         run: |
           git fetch
@@ -51,7 +53,7 @@ jobs:
       BRANCH: ${{ github.ref }}
       GITHUB_USERNAME: ${{ github.actor }}
       VERSION: ${{ needs.increment-version.outputs.new_version }}
-  steps:
+    steps:
     - uses: actions/checkout@v2
     - name: Push to TestPyPI
       run: |
