@@ -5,6 +5,8 @@ on:
   push: 
     branches:
       - '*'
+    tags:
+      - '*'
     paths:
       - '**'
   pull_request:
