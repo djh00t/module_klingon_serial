@@ -19,6 +19,7 @@ jobs:
       new_version: ${{ steps.versioning.outputs.new_version }}
     steps:
       - uses: actions/checkout@v2
+     - uses: actions/checkout@v3
       - name: Increment version number
         id: versioning
         run: |
@@ -32,7 +33,7 @@ jobs:
           ((VER[2]++))
           new_version="${VER[0]}.${VER[1]}.${VER[2]}"
           echo $new_version > $file
-          echo "::set-output name=new_version::$new_version"
+          echo "new_version=$new_version" >> $GITHUB_ENV
           echo "New version: $new_version"
       - name: Commit and push new version
         run: |
@@ -48,6 +49,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v2
+     - uses: actions/checkout@v3
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
