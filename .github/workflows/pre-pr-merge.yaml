@@ -41,7 +41,18 @@ jobs:
           make sdist
           make wheel
           make test
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet origin/${{ github.base_ref }}...HEAD; then
+            echo "No changes detected."
+            echo "has_changes=no" >> $GITHUB_ENV
+          else
+            echo "Changes detected."
+            echo "has_changes=yes" >> $GITHUB_ENV
+          fi
       - name: pull-request
+        if: env.has_changes == 'yes'
         uses: diillson/auto-pull-request@latest
         with:
           destination_branch: "main"
