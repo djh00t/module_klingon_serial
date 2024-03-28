@@ -47,5 +47,5 @@ jobs:
           make test
       - name: pull-request
         uses: diillson/auto-pull-request@latest
-          with:
-            destination_branch: "main"
+        with:
+          destination_branch: "main"
