@@ -26,9 +26,9 @@ jobs:
       GITHUB_USERNAME: ${{ github.actor }}
 
     steps:
-      - uses: actions/checkout@v3-node20
+      - uses: actions/checkout@v3
       - name: Set up Python 3.x
-        uses: actions/setup-python@v3-node20
+        uses: actions/setup-python@v3
         with:
           python-version: 3.x
       - name: "Install dependencies"
