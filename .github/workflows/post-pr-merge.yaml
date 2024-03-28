@@ -11,8 +11,13 @@ jobs:
   increment-version:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    outputs:
+      source_branch: ${{ steps.extract_branch.outputs.source_branch }}
     steps:
       - uses: actions/checkout@v2
+      - name: Extract source branch name
+        id: extract_branch
+        run: echo "::set-output name=source_branch::$(echo ${GITHUB_REF#refs/heads/})"
       - run: |
           file="VERSION"
           if [ ! -f "$file" ]; then
@@ -31,6 +36,12 @@ jobs:
           git add VERSION
           git commit -m "Update version number - $new_version" -a || echo "No changes to commit"
           git push
+      - name: Push VERSION to the source branch
+        run: |
+          git fetch
+          git checkout ${{ steps.extract_branch.outputs.source_branch }}
+          git merge main --no-edit
+          git push origin ${{ steps.extract_branch.outputs.source_branch }}
 
   build-production:
     runs-on: ubuntu-latest
