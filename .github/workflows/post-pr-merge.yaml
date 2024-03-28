@@ -18,8 +18,7 @@ jobs:
       source_branch: ${{ steps.extract_branch.outputs.source_branch }}
       new_version: ${{ steps.versioning.outputs.new_version }}
     steps:
-      - uses: actions/checkout@v2
-     - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: Increment version number
         id: versioning
         run: |
@@ -48,8 +47,7 @@ jobs:
     needs: increment-version
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     steps:
-      - uses: actions/checkout@v2
-     - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
