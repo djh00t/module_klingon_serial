@@ -4,29 +4,29 @@ IMAGE_NAME := djh00t/klingon-serial
 
 build:
 	@echo "Building Docker image with version $(VERSION)"
-	# Build the Docker image locally first
-	@if ! docker buildx inspect multi-arch-builder > /dev/null 2>&1; then \
+	# Check for buildx and create if not exists
+	if ! docker buildx inspect multi-arch-builder > /dev/null 2>&1; then \
 		docker buildx create --name multi-arch-builder --use; \
 	fi
+	# Build image
 	docker build --tag $(IMAGE_NAME):$(VERSION) .
-	# Remove any hanging containers that might have been left from previous tests
+	# Tag as latest
+	docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):latest
+	# Remove hanging containers
 	CONTAINERS=$$(docker ps -a --filter "name=klingon-serial-test" -q); \
 	if [ -n "$$CONTAINERS" ]; then \
 		docker container rm -f $$CONTAINERS; \
 	fi
-	# Run the Docker image to ensure it starts correctly
+	# Run image for testing
 	docker run -d --name klingon-serial-test -p 8080:8080 $(IMAGE_NAME):$(VERSION)
-	# Wait for a few seconds to give the container time to start
 	sleep 5
-	# Check if the container is running and the application responds
+	# Health check and push if successful
 	if docker ps | grep -q klingon-serial-test; then \
 		if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health | grep -q 200; then \
 			echo "Container started successfully, pushing to Docker Hub..."; \
 			docker push $(IMAGE_NAME):$(VERSION); \
 			docker push $(IMAGE_NAME):latest; \
-			# Remove any previous versions of the image \
 			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(IMAGE_NAME):$(VERSION)) || true; \
-	fi; \
 		else \
 			echo "Health check failed, not pushing to Docker Hub."; \
 			exit 1; \
@@ -35,9 +35,10 @@ build:
 		echo "Container did not start, not pushing to Docker Hub."; \
 		exit 1; \
 	fi
-	# Clean up the test container
+	# Clean up
 	docker stop klingon-serial-test
 	docker rm klingon-serial-test
+	# Increment version
 	@echo $$(echo $(VERSION) | awk -F. '{ printf "%d.%d.%d", $$1, $$2, $$3+1 }') > $(VERSION_FILE)
 
 test:
