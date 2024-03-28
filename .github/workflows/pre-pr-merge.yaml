@@ -45,6 +45,9 @@ jobs:
         uses: diillson/auto-pull-request@latest
         with:
           destination_branch: "main"
+          pr_label: "auto-pr"                               # Comma-separated list (no spaces)
+          pr_draft: true                                    # Creates pull request as draft
+          pr_allow_empty: true                              # Creates pull request even if there are no changes
       - name: output-url
         run: echo ${{steps.open-pr.outputs.pr_url}}
       - name: output-number
