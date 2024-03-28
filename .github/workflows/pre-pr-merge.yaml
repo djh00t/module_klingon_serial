@@ -50,5 +50,3 @@ jobs:
         run: |
           branch_name=$(echo ${GITHUB_REF#refs/heads/})
           gh pr create --title "Merge $branch_name into main" --body "This is an automated PR to merge changes from $branch_name into main." --base main --head $branch_name --repo ${{ github.repository }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
