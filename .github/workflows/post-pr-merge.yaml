@@ -9,6 +9,7 @@ on:
     types: [closed]
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   increment-version:
@@ -21,17 +22,16 @@ jobs:
       source_branch: ${{ steps.extract_branch.outputs.source_branch }}
       new_version: ${{ steps.versioning.outputs.new_version }}
     steps:
-
       - uses: actions/checkout@v3
-     - name: Install GitHub CLI
-       run: |
-         sudo apt update
-         sudo apt install -y gh
-     - name: Login to GitHub CLI
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       run: |
-         echo "${GITHUB_TOKEN}" | gh auth login --with-token
+      - name: Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install -y gh
+      - name: Login to GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "${GITHUB_TOKEN}" | gh auth login --with-token
       - name: Increment version number
         id: versioning
         run: |
@@ -54,8 +54,8 @@ jobs:
           git add VERSION
           git commit -m "Update version number - $new_version" || echo "No changes to commit"
           git checkout -b version-bump
-         git push origin version-bump
-         gh pr create --title "Update version number - $new_version" --body "This is an automated PR to update the version number to $new_version" --base main --head version-bump --reviewer <REVIEWER_USERNAME> --label "version-bump"
+          git push origin version-bump
+          gh pr create --title "Update version number - $new_version" --body "This is an automated PR to update the version number to $new_version" --base main --head version-bump --reviewer <REVIEWER_USERNAME> --label "version-bump"
 
   post-pr-merge:
     runs-on: ubuntu-latest
@@ -63,15 +63,15 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v3
-     - name: Install GitHub CLI
-       run: |
-         sudo apt update
-         sudo apt install -y gh
-     - name: Login to GitHub CLI
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       run: |
-         echo "${GITHUB_TOKEN}" | gh auth login --with-token
+      - name: Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install -y gh
+      - name: Login to GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "${GITHUB_TOKEN}" | gh auth login --with-token
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
