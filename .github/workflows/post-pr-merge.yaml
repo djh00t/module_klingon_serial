@@ -29,8 +29,9 @@ jobs:
           sudo apt install -y gh
       - name: Login to GitHub CLI
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+          echo "${GITHUB_TOKEN}" | gh auth login --with-token
       - name: Increment version number
         id: versioning
         run: |
@@ -68,8 +69,9 @@ jobs:
           sudo apt install -y gh
       - name: Login to GitHub CLI
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+          echo "${GITHUB_TOKEN}" | gh auth login --with-token
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
