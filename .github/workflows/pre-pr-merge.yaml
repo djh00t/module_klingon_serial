@@ -6,6 +6,8 @@ on:
 #    branches:
 #      - '!main'
   pull_request:
+    paths-ignore:
+      - 'openfaas/**'
     branches:
       - main
   workflow_dispatch:
