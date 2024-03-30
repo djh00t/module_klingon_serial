@@ -6,6 +6,11 @@ DOCKER_BUILDX_BUILDER := multi-arch-builder
 
 .PHONY: build test clean run check-buildx
 
+# Check if Docker daemon is running
+check-docker:
+	@echo "Checking if Docker daemon is running..."
+	@docker info > /dev/null 2>&1 || (echo "Docker daemon is not running. Please start Docker and try again." && exit 1)
+
 # Check for buildx and create if not exists
 check-buildx:
 	@if ! docker buildx inspect $(DOCKER_BUILDX_BUILDER) > /dev/null 2>&1; then \
