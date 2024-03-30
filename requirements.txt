@@ -4,3 +4,4 @@ uuid
 str2bool
 setuptools
 fastapi
+httpx
