@@ -64,7 +64,7 @@ def build_image_with_buildx(image_name, new_version):
         logging.error("Dockerfile does not exist in the current directory.")
         exit(1)
 
-    command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
+    command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain {script_dir}"
     run_command(command)
 
 
