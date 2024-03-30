@@ -33,11 +33,12 @@ build:
 			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(IMAGE_NAME):$(VERSION)) || true; \
 		else \
 			echo "Health check or serial validation failed, not pushing to Docker Hub."; \
-			echo "Health check or serial validation failed, not pushing to Docker Hub."; \
+			docker container rm -f klingon-serial-test; \
 			exit 1; \
 		fi; \
 	else \
 		echo "Container did not start, not pushing to Docker Hub."; \
+		docker container rm -f klingon-serial-test; \
 		exit 1; \
 	fi
 	# Clean up
