@@ -20,7 +20,9 @@ def run_command(command, capture_output=True, text=True, check=True):
 
 def fetch_latest_tag(image_name):
     logging.debug(f"Fetching the latest tag for image: {image_name}")
-    response = requests.get(f"https://registry.hub.docker.com/v2/repositories/{image_name}/tags")
+    # Extract the part of the image name after the slash
+    image_name_without_registry = image_name.split('/')[-1]
+    response = requests.get(f"https://registry.hub.docker.com/v2/repositories/{image_name_without_registry}/tags")
     json_response = response.json()
     if 'results' not in json_response:
         logging.error("Unable to fetch tags, 'results' key not found in the response.")
