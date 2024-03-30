@@ -113,8 +113,5 @@ def main():
         logging.error("Image failed the health check, not pushing to Docker Hub.")
         exit(1)
 
-def main():
-    # ... existing code ...
-
 if __name__ == "__main__":
     main()
