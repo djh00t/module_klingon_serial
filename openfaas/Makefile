@@ -20,9 +20,16 @@ build:
 	else \
 		echo "Latest tag found: $$LATEST_TAG"; \
 	fi
-	@echo "Incrementing version number by 0.1.0"
-	@echo $$(echo $(VERSION) | awk -F. '{$$NF = $$NF + 1; $$2 = $$2 + 1; $$3 = 0;} 1' | sed 's/ /./g') > $(VERSION_FILE)
-	@echo "Building image $(IMAGE_NAME):$(VERSION)"
+	# Version numbering is MAJOR.MINOR.PATCH this script should increment the
+	# patch number by 1 and tag the image with the new version number
+	@echo "Incrementing version number..."
+	@MAJOR=$$(echo $(VERSION) | cut -d. -f1); \
+	MINOR=$$(echo $(VERSION) | cut -d. -f2); \
+	PATCH=$$(echo $(VERSION) | cut -d. -f3); \
+	NEW_VERSION=$$MAJOR.$$MINOR.$$((PATCH+1)); \
+	echo "New version: $$NEW_VERSION"; \
+	echo $$NEW_VERSION > $(VERSION_FILE)
+
 
 
 test:
