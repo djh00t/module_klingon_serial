@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'openfaas/**'
+      - '.github/workflows/openfaas-docker-build.yaml'
 
 jobs:
   build-and-push:
