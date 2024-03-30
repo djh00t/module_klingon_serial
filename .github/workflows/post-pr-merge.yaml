@@ -52,7 +52,6 @@ jobs:
           git commit -m "Increment version number to ${{ env.new_version }}"
           git push
       - name: Push to TestPyPI
-        if: github.ref == 'refs/heads/main'
         if: github.ref == 'refs/heads/main' # This ensures that PyPI upload only happens on main branch merges.  
         run: |
             make upload-test TEST_PYPI_USER_AGENT=${{ secrets.TEST_PYPI_USER_AGENT }} VERSION=${{ env.new_version }}
