@@ -19,9 +19,8 @@ check-buildx:
 
 build:
 	# Build and push multi-architecture images
-	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):$(VERSION) --push .
-	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):latest --push .
-	sleep 10 # Increase sleep time to ensure the container has enough time to start
+	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):$(VERSION) -t $(IMAGE_NAME):latest --push .
+	sleep 5 # Increase sleep time to ensure the container has enough time to start
 	# Health check, test endpoints, validate serial
 	@if docker ps | grep -q klingon-serial-test; then \
 		echo "Running Health Check"; \
