@@ -34,38 +34,15 @@ build:
 			docker push $(IMAGE_NAME):$(VERSION); \
 			docker push $(IMAGE_NAME):latest; \
 			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(IMAGE_NAME):$(VERSION)) || true; \
-		else \
-			echo "Health check or serial validation failed, not pushing to Docker Hub."; \
-			docker container rm -f klingon-serial-test; \
-			exit 1; \
-		fi; \
-	else \
-		echo "Container did not start, not pushing to Docker Hub."; \
-		docker container rm -f klingon-serial-test; \
-		exit 1; \
-	fi
-		echo "Running Health Check" \
-		HEALTH_CHECK=$$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health); \
-		echo "Checking Serial Response" \
-		SERIAL_RESPONSE=$$(curl -s -H "Accept: application/json" http://localhost:8080/); \
-		echo $$SERIAL_RESPONSE; \
-		SERIAL=$$(echo $$SERIAL_RESPONSE | jq -r '.serial'); \
-		echo "Validating Serial" \
-		if [ "$$HEALTH_CHECK" -eq 200 ]; then \
-			echo "Container started successfully, pushing to Docker Hub..."; \
-			docker push $(IMAGE_NAME):$(VERSION); \
-			docker push $(IMAGE_NAME):latest; \
+	# Clean up
+	docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q) || true
+	# Increment version
+	@echo $$(echo $(VERSION) | awk -F. '{ printf "%d.%d.%d", $$1, $$2, $$3+1 }') > $(VERSION_FILE)
 			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(IMAGE_NAME):$(VERSION)) || true; \
-		else \
-			echo "Health check or serial validation failed, not pushing to Docker Hub."; \
-			docker container rm -f klingon-serial-test; \
-			exit 1; \
-		fi; \
-	else \
-		echo "Container did not start, not pushing to Docker Hub."; \
-		docker container rm -f klingon-serial-test; \
-		exit 1; \
-	fi
+	# Clean up
+	docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q) || true
+	# Increment version
+	@echo $$(echo $(VERSION) | awk -F. '{ printf "%d.%d.%d", $$1, $$2, $$3+1 }') > $(VERSION_FILE)
 	# Clean up
 	docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q) || true
 	# Increment version
