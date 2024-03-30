@@ -15,18 +15,21 @@ check-buildx:
 build:
 	@echo "Fetching all tags for $(IMAGE_NAME)..."
 	@LATEST_TAG=$$(curl -s "https://registry.hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags" | jq -r '.results|.[]?.name' | grep -v latest | head -1); \
+	@LATEST_TAG=$$(curl -s "https://registry.hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags" | jq -r '.results|.[]?.name' | grep -v latest | sort -V | tail -1); \
 	if [ -z "$$LATEST_TAG" ]; then \
 		echo "No tags found for $(IMAGE_NAME)"; \
 	else \
 		echo "Latest tag found: $$LATEST_TAG"; \
 	fi
-	# Version numbering is MAJOR.MINOR.PATCH this script should increment the
-	# patch number by 1 and tag the image with the new version number
-	@echo "Incrementing version number..."
-	@MAJOR=$$(echo $(VERSION) | cut -d. -f1); \
-	MINOR=$$(echo $(VERSION) | cut -d. -f2); \
-	PATCH=$$(echo $(VERSION) | cut -d. -f3); \
-	NEW_VERSION=$$MAJOR.$$MINOR.$$((PATCH+1)); \
+	# Version numbering is MAJOR.MINOR.PATCH. This script should increment the
+	# PATCH number by 1 and tag the image with the new version number. If PATCH is 9,
+	# it should roll over to 10 and so on.
+	@echo "Calculating new version number..."
+	@MAJOR=$$(echo $$LATEST_TAG | cut -d. -f1); \
+	MINOR=$$(echo $$LATEST_TAG | cut -d. -f2); \
+	PATCH=$$(echo $$LATEST_TAG | cut -d. -f3); \
+	NEW_PATCH=$$((PATCH+1)); \
+	NEW_VERSION=$$MAJOR.$$MINOR.$$NEW_PATCH; \
 	echo "New version: $$NEW_VERSION"; \
 	echo $$NEW_VERSION > $(VERSION_FILE)
 
