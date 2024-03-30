@@ -126,4 +126,4 @@ if __name__ == "__main__":
         import sys
         sys.exit(test_exit_code)
     # If run as the main module, start the Uvicorn server to serve the FastAPI application.
-    uvicorn.run("openfaas.handler:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("openfaas.handler:app", host="0.0.0.0", port=8080, reload=True)
