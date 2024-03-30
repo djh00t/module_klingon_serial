@@ -14,14 +14,15 @@ check-buildx:
 
 build:
 	@echo "Fetching all tags for $(IMAGE_NAME)..."
-	@TAGS=$$(curl -s -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
-	"https://registry.hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags" | jq -r '.results|.[]?.name'); \
-	if [ -z "$$TAGS" ]; then \
+	@LATEST_TAG=$$(curl -s "https://registry.hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags" | jq -r '.results|.[]?.name' | grep -v latest | head -1); \
+	if [ -z "$$LATEST_TAG" ]; then \
 		echo "No tags found for $(IMAGE_NAME)"; \
 	else \
-		echo "$$TAGS" | sort -V | tail -n1 | xargs -I {} echo "Highest version found: {}"; \
+		echo "Latest tag found: $$LATEST_TAG"; \
 	fi
-
+	@echo "Incrementing version number by 0.0.1"
+	@echo $$(echo $(VERSION) | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g') > $(VERSION_FILE)
+	@echo "Building image $(IMAGE_NAME):$(VERSION)"
 
 
 test:
