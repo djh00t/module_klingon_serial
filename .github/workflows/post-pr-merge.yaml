@@ -34,7 +34,7 @@ jobs:
         id: check_version
         run: |
           echo "Checking current version on TestPyPI..."
-          current_version=$(pip index versions klingon-serial | grep -Po '(?<=\().*?(?=\))' | sort -V | tail -n 1)
+          current_version=$(pip index versions --index-url https://test.pypi.org/simple/ klingon-serial | grep -Po '(?<=\().*?(?=\))' | sort -V | tail -n 1)
           echo "Current version on TestPyPI is $current_version"
           IFS='.' read -ra VERSION_PARTS <<< "$current_version"
           VERSION_PARTS[-1]=$((VERSION_PARTS[-1]+1))
