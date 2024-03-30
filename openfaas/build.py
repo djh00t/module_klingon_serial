@@ -74,7 +74,7 @@ def test_image(image_name, new_version):
     valid_container_name = image_name.replace('/', '_')
     # Ensure any existing test container is removed
     run_command(f"docker rm -f {valid_container_name}-test", check=False)
-    command = f"docker run --rm --name {valid_container_name}-test -d -p 8080:8080 {image_name}:{new_version}"
+    command = f"docker run --rm --name {valid_container_name}-test -d -p 8080:8080 {image_name}:{new_version} /start-reload.sh"
     run_command(command)
     time.sleep(5)  # Wait for the container to start
     try:
