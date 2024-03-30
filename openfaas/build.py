@@ -59,6 +59,7 @@ def increment_version(latest_tag, version_type):
 def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
     parser = argparse.ArgumentParser(description='Increment version number for a Docker image.')
+    parser.add_argument('--image', required=True, help='Name of the Docker image to fetch tags for and increment version.')
     parser.add_argument('--quiet', action='store_true', help='Suppress INFO level logging.')
     parser.add_argument('--debug', action='store_true', help='Enable DEBUG level logging.')
     parser.add_argument('--major', action='store_true', help='Increment the major version number.')
@@ -77,8 +78,8 @@ def main():
     elif args.minor:
         version_type = 'minor'
 
-    image_name = os.getenv('IMAGE_NAME', 'djh00t/klingon-serial')
-    version_file = os.getenv('VERSION_FILE', 'VERSION')
+    image_name = args.image
+    version_file = 'VERSION'
     logging.debug(f"Image name: {image_name}")
     logging.debug(f"Version file: {version_file}")
     latest_tag = fetch_latest_tag(image_name)
