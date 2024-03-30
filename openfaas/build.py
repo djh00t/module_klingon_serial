@@ -54,7 +54,7 @@ def build_image_with_buildx(image_name, new_version):
             logging.info("Using existing builder")
             # Use the existing builder, no need to create a new one
             builder_used = 'default' if 'default' in existing_builders else 'desktop-linux'
-            run_command(f"docker buildx use {builder_used}")
+            run_command(f"docker context use {builder_used}")
         else:
             logging.info("No appropriate existing builder found, creating a new one")
             builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
