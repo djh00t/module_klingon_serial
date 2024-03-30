@@ -47,17 +47,18 @@ import platform
 def build_image_with_buildx(image_name, new_version):
     platforms = "linux/amd64,linux/arm64"
     logging.info(f"Building Docker image for platforms {platforms}")
-    builder_used = None
-    # Create a new builder that supports multi-platform builds
-    logging.info("Creating a new builder that supports multi-platform builds")
-    builder_used = run_command("docker buildx create --use --driver docker-container --platform linux/amd64,linux/arm64", capture_output=True, text=True).stdout.strip()
+    builder_name = "klingon-builder"
+    existing_builders = run_command("docker buildx ls", capture_output=True, text=True).stdout
+    if builder_name not in existing_builders:
+        logging.info(f"Creating a new builder named {builder_name} that supports multi-platform builds")
+        run_command(f"docker buildx create --name {builder_name} --use --driver docker-container --platform linux/amd64,linux/arm64", capture_output=True, text=True)
+    else:
+        logging.info(f"Using existing builder named {builder_name}")
+        run_command(f"docker buildx use {builder_name}")
 
     command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
     run_command(command)
 
-    if builder_used and builder_used not in ['default', 'desktop-linux']:
-        logging.info(f"Cleaning up the created builder: {builder_used}")
-        run_command(f"docker buildx rm {builder_used}")
 
     elif platform.system() == 'Linux':
         # This block should handle Linux systems
