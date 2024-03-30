@@ -50,11 +50,21 @@ def build_image_with_buildx(image_name, new_version):
     builder_used = None
     if platform.system() == 'Darwin':  # Check if the system is macOS
         existing_builders = run_command("docker buildx ls", capture_output=True, text=True).stdout
-        if 'default' in existing_builders or 'desktop-linux' in existing_builders:
+        if 'default' in existing_builders:
             logging.info("Using existing builder")
             # Use the existing builder, no need to create a new one
             builder_used = 'default' if 'default' in existing_builders else 'desktop-linux'
-            run_command(f"docker buildx use {builder_used}")
+        else:
+        # Check if there is any builder using the specified image
+        for line in existing_builders.splitlines():
+            if builder_image in line:
+                builder_name = line.split()[0]
+                logging.info(f"Using existing builder with image {builder_image}: {builder_name}")
+                builder_used = builder_name
+                break
+
+    if builder_used:
+        run_command(f"docker buildx use {builder_used}")
         else:
             logging.info("No appropriate existing builder found, creating a new one")
             builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
@@ -63,7 +73,10 @@ def build_image_with_buildx(image_name, new_version):
         builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
 
     command = f"docker buildx create --use --driver docker-container"
-    run_command(command)
+    run_command(command)    else:
+        logging.info(f"No existing builder found, creating a new one with image {builder_image}")
+        builder_used = run_command(f"docker buildx create --use --driver docker-container --driver-opt image={builder_image}", capture_output=True, text=True).stdout.strip()
+
     command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
     run_command(command)
 
