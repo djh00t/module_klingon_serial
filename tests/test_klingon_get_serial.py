@@ -43,3 +43,10 @@ def test_endpoint_root():
     data = response.json()
     assert "serial" in data
     assert is_valid_serial(data["serial"])
+def test_endpoint_root():
+    """Test the root endpoint `/` to ensure it returns a valid serial number."""
+    response = client.get("/", headers={"Accept": "application/json"})
+    assert response.status_code == 200
+    data = response.json()
+    assert "serial" in data
+    assert is_valid_serial(data["serial"])
