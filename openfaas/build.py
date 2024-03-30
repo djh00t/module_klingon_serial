@@ -57,6 +57,11 @@ def build_image_with_buildx(image_name, new_version):
         logging.info(f"Using existing builder named {builder_name}")
         run_command(f"docker buildx use {builder_name}")
 
+    # Check if Dockerfile exists in the current directory
+    if not os.path.isfile('Dockerfile'):
+        logging.error("Dockerfile does not exist in the current directory.")
+        exit(1)
+
     command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
     run_command(command)
 
