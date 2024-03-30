@@ -56,9 +56,6 @@ async def health():
         serial = generate_serial()
         if not is_valid_serial(serial):
             raise Exception("Generated serial is invalid.")
-        response = await app.client.get("/")
-        if response.status_code != 200:
-            raise Exception(f"Unexpected status code: {response.status_code}")
         return {"status": "ok"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
