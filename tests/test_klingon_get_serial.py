@@ -1,6 +1,8 @@
 """Tests for the `generate_serial()` function in `klingon.generate_serial`.
 
 """
+from fastapi.testclient import TestClient
+from openfaas.handler import app
 
 import pytest
 from klingon_serial.generate import generate_serial, get_mac_address_hex, get_process_id, get_millisecond_epoch_hex
@@ -36,6 +38,15 @@ def test_generate_serial():
 
     assert isinstance(serial, str)
     assert len(serial) == 28
+
+def test_endpoint_root():
+    """Test the root endpoint `/` to ensure it returns a valid serial number."""
+    client = TestClient(app)
+    response = client.get("/", headers={"Accept": "application/json"})
+    assert response.status_code == 200
+    data = response.json()
+    assert "serial" in data
+    assert is_valid_serial(data["serial"])
 def test_endpoint_root():
     """Test the root endpoint `/` to ensure it returns a valid serial number."""
     response = client.get("/", headers={"Accept": "application/json"})
