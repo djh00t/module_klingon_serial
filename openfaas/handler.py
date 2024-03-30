@@ -53,11 +53,15 @@ async def health():
     In the event that anything doesn't work, the exception should be caught and
     dumped to the result as a string and a 500 error should be returned.
     """
-    serial = generate_serial()
-    if is_valid_serial(serial):
-        return {"status": "ok", "serial": serial}
-    else:
-        return {"status": "error", "message": "Invalid serial generated"}, 500
+    try:
+        client = TestClient(app)
+        response = client.get("/", headers={"Accept": "application/json"})
+        if response.status_code == 200 and "serial" in response.json():
+            return {"status": "ok"}
+        else:
+            raise Exception("The / endpoint did not return a valid response.")
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 500
 
 
 @app.get("/favicon.ico")
