@@ -14,9 +14,15 @@ check-buildx:
 
 build:
 	@echo "Delegating build versioning to build.py..."
-	@python3 openfaas/build.py
+	@python3 build.py --image djh00t/klingon-serial --patch
 
+build-minor:
+	@echo "Delegating build versioning to build.py..."
+	@python3 build.py --image djh00t/klingon-serial --minor
 
+build-major:
+	@echo "Delegating build versioning to build.py..."
+	@python3 build.py --image djh00t/klingon-serial --major
 
 test:
 	pytest -v
@@ -26,6 +32,7 @@ clean:
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
 	find . -type d -name '.pytest_cache' -delete
+	rm -rf .pytest_cache
 
 run:
 	uvicorn openfaas.handler:app --host 0.0.0.0 --port 8000
