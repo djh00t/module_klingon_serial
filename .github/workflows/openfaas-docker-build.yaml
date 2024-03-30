@@ -1,7 +1,7 @@
 name: OpenFaaS Docker Build
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths:
