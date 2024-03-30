@@ -32,7 +32,7 @@ build:
 			docker push $(IMAGE_NAME):latest; \
 			docker image rm -f $$(docker images --filter=reference="$(IMAGE_NAME):*" -q | grep -v $(IMAGE_NAME):$(VERSION)) || true; \
 		else \
-			echo "Health check failed, not pushing to Docker Hub."; \
+			echo "Health check or serial validation failed, not pushing to Docker Hub."; \
 			echo "Health check or serial validation failed, not pushing to Docker Hub."; \
 			exit 1; \
 		fi; \
