@@ -29,11 +29,14 @@ if __name__ == "__main__":
 import requests
 import os
 import argparse
+import logging
 
 def fetch_latest_tag(image_name):
+    logging.debug(f"Fetching the latest tag for image: {image_name}")
     response = requests.get(f"https://registry.hub.docker.com/v2/repositories/{image_name}/tags")
     tags = response.json()['results']
     latest_tag = max((tag['name'] for tag in tags if tag['name'] != 'latest'), default=None, key=lambda t: list(map(int, t.split('.'))))
+    logging.info(f"Latest tag fetched: {latest_tag}")
     return latest_tag
 
 def increment_version(latest_tag, version_type):
@@ -50,11 +53,19 @@ def increment_version(latest_tag, version_type):
     return f"{major}.{minor}.{patch}"
 
 def main():
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
     parser = argparse.ArgumentParser(description='Increment version number for a Docker image.')
+    parser.add_argument('--quiet', action='store_true', help='Suppress INFO level logging.')
+    parser.add_argument('--debug', action='store_true', help='Enable DEBUG level logging.')
     parser.add_argument('--major', action='store_true', help='Increment the major version number.')
     parser.add_argument('--minor', action='store_true', help='Increment the minor version number.')
     parser.add_argument('--patch', action='store_true', help='Increment the patch version number.')
     args = parser.parse_args()
+
+    if args.quiet:
+        logging.getLogger().setLevel(logging.WARNING)
+    if args.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
 
     version_type = 'patch'
     if args.major:
@@ -64,11 +75,14 @@ def main():
 
     image_name = os.getenv('IMAGE_NAME', 'djh00t/klingon-serial')
     version_file = os.getenv('VERSION_FILE', 'VERSION')
+    logging.debug(f"Image name: {image_name}")
+    logging.debug(f"Version file: {version_file}")
     latest_tag = fetch_latest_tag(image_name)
     new_version = increment_version(latest_tag, version_type)
-    print(f"New version: {new_version}")
+    logging.info(f"New version: {new_version}")
     with open(version_file, 'w') as f:
         f.write(new_version)
+        logging.debug(f"Version {new_version} written to {version_file}")
 
 if __name__ == "__main__":
     main()
