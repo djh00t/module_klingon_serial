@@ -6,11 +6,6 @@ DOCKER_BUILDX_BUILDER := multi-arch-builder
 
 .PHONY: build test clean run check-buildx
 
-# Check if Docker daemon is running
-check-docker:
-	@echo "Checking if Docker daemon is running..."
-	@docker info > /dev/null 2>&1 || (echo "Docker daemon is not running. Please start Docker and try again." && exit 1)
-
 # Check for buildx and create if not exists
 check-buildx:
 	@if ! docker buildx inspect $(DOCKER_BUILDX_BUILDER) > /dev/null 2>&1; then \
@@ -18,9 +13,11 @@ check-buildx:
 	fi
 
 build:
-	# Build and push multi-architecture images
-	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):$(VERSION) -t $(IMAGE_NAME):latest --push .
-	sleep 5 # Increase sleep time to ensure the container has enough time to start
+	# Ensure the container is removed even if it doesn't exist
+	-docker container rm -f $(TEST_CONTAINER)
+	# Run image for testing with platform specification
+	docker run -d --name $(TEST_CONTAINER) --platform linux/amd64 -p 8080:8080 $(IMAGE_NAME):$(VERSION)
+	sleep 5
 	# Health check, test endpoints, validate serial
 	@if docker ps | grep -q klingon-serial-test; then \
 		echo "Running Health Check"; \
@@ -40,8 +37,6 @@ build:
 		docker container rm -f klingon-serial-test; \
 	else \
 		echo "Container did not start successfully"; \
-		docker logs $(TEST_CONTAINER); \
-		docker container rm -f $(TEST_CONTAINER); \
 		exit 1; \
 	fi
 
