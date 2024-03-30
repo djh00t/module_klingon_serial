@@ -15,8 +15,8 @@ check-buildx:
 build:
 	# Ensure the container is removed even if it doesn't exist
 	-docker container rm -f $(TEST_CONTAINER)
-	# Fetch the latest version tag from Docker Hub
-	LATEST_VERSION=$$(docker run --rm skandyla/docker-hub-api:latest tags $(IMAGE_NAME) | jq -r '.results | sort_by(.name | tonumber) | last(.[]).name')
+	# Fetch the latest version tag from Docker Hub using the official Docker Hub API
+	LATEST_VERSION=$$(curl -s -H "Authorization: Bearer $TOKEN" "https://hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags/?page_size=1&page=1&ordering=last_updated" | jq -r '.results[0].name')
 	# Increment the latest version by one
 	NEW_VERSION=$$(echo $$LATEST_VERSION | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
 	# Update the VERSION file with the new version
