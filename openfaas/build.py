@@ -22,9 +22,10 @@ def fetch_latest_tag(image_name):
     logging.debug(f"Fetching the latest tag for image: {image_name}")
     # Extract the part of the image name after the slash
     image_name_without_registry = image_name.split('/')[-1]
-    response = requests.get(f"https://registry.hub.docker.com/v2/repositories/{image_name_without_registry}/tags")
+    response = requests.get(f"https://registry.hub.docker.com/v2/repositories/{image_name_without_registry}/tags?page_size=100")
     json_response = response.json()
-    if 'results' not in json_response:
+    if response.status_code != 200 or 'results' not in json_response:
+        logging.error(f"Unable to fetch tags, response: {json_response}")
         logging.error("Unable to fetch tags, 'results' key not found in the response.")
         exit(1)
     tags = json_response['results']
@@ -73,7 +74,21 @@ def build_image_with_buildx(image_name, new_version):
         run_command(f"docker buildx rm {builder_used}")
 
 def test_image(image_name, new_version):
-    # ... existing code ...
+    logging.info(f"Testing Docker image {image_name}:{new_version}")
+    valid_container_name = image_name.replace('/', '_')
+    command = f"docker run --rm --name {valid_container_name}_test -d -p 8080:8080 {image_name}:{new_version}"
+    run_command(command)
+    time.sleep(5)  # Wait for the container to start
+    try:
+        response = requests.get("http://localhost:8080/health")
+        if response.status_code == 200:
+            logging.info("Health check passed.")
+            return True
+        else:
+            logging.error(f"Health check failed with status code: {response.status_code}")
+            return False
+    finally:
+        run_command(f"docker stop {valid_container_name}_test", check=False)
     logging.info(f"Testing Docker image {image_name}:{new_version}")
     # Replace slashes in the image name with underscores for a valid container name
     valid_container_name = image_name.replace('/', '_')
