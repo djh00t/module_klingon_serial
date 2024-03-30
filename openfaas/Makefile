@@ -13,6 +13,13 @@ check-buildx:
 	fi
 
 build:
+	@echo "Checking Docker Hub for the highest version number of $(IMAGE_NAME)..."
+	@docker pull --quiet --all-tags $(IMAGE_NAME) 2>/dev/null | \
+	grep -oE ':[0-9.]+' | \
+	sed 's/://g' | \
+	sort -V | \
+	tail -n1 | \
+	xargs -I {} echo "Highest version found: {}"
 
 
 
