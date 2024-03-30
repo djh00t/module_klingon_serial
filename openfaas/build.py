@@ -48,6 +48,7 @@ def build_image_with_buildx(image_name, new_version):
     platforms = "linux/amd64,linux/arm64"
     logging.info(f"Building Docker image for platforms {platforms}")
     builder_used = None
+    existing_builders = run_command("docker buildx ls", capture_output=True, text=True).stdout
     if platform.system() == 'Darwin':  # Check if the system is macOS
         existing_builders = run_command("docker buildx ls", capture_output=True, text=True).stdout
         if 'default' in existing_builders or 'desktop-linux' in existing_builders:
@@ -58,24 +59,13 @@ def build_image_with_buildx(image_name, new_version):
         else:
             logging.info("No appropriate existing builder found, creating a new one")
             builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
+    # Ensure we have a builder that supports multi-platform builds
+    if 'linux/amd64' not in existing_builders or 'linux/arm64' not in existing_builders:
+        logging.info("Creating a new builder that supports multi-platform builds")
+        builder_used = run_command("docker buildx create --use --driver docker-container --platform linux/amd64,linux/arm64", capture_output=True, text=True).stdout.strip()
     else:
-        # Check if there is any builder using the specified image
-        for line in existing_builders.splitlines():
-            if builder_image in line:
-                builder_name = line.split()[0]
-                logging.info(f"Using existing builder with image {builder_image}: {builder_name}")
-                builder_used = builder_name
-                break
-
-        if builder_used:
-            run_command(f"docker buildx use {builder_used}")
-        else:
-            logging.info("No appropriate existing builder found, creating a new one")
-            builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
-
-    if not builder_used:
-        logging.info("Creating a new builder as none are available")
-        builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
+        # Use the default builder if it supports multi-platform builds
+        builder_used = 'default'
 
     command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
     run_command(command)
