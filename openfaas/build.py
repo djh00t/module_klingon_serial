@@ -5,6 +5,7 @@ import logging
 import subprocess
 import json
 import time
+import platform
 
 def run_command(command, capture_output=True, text=True, check=True):
     try:
@@ -42,7 +43,7 @@ def increment_version(latest_tag, version_type):
     else:  # patch is the default
         patch += 1
     return f"{major}.{minor}.{patch}"
-import platform
+
 
 def build_image_with_buildx(image_name, new_version):
     platforms = "linux/amd64,linux/arm64"
@@ -59,24 +60,6 @@ def build_image_with_buildx(image_name, new_version):
     command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
     run_command(command)
 
-
-    elif platform.system() == 'Linux':
-        # This block should handle Linux systems
-        # Check if there is any builder using the specified image
-        # This part of the code is missing and should be implemented as needed
-        pass  # Replace this with the actual implementation
-    else:
-        # This block should handle other systems (e.g., Windows)
-        # Implement the necessary logic for other systems or raise an error
-        raise NotImplementedError("The build script does not support this operating system yet.")
-
-
-    command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
-    run_command(command)
-
-    if builder_used and builder_used not in ['default', 'desktop-linux']:
-        logging.info(f"Cleaning up the created builder: {builder_used}")
-        run_command(f"docker buildx rm {builder_used}")
 
 def test_image(image_name, new_version):
     logging.info(f"Testing Docker image {image_name}:{new_version}")
