@@ -2,8 +2,6 @@ name: Post-PR Merge CI
 
 # Controls when the action will run. 
 on:
-#  push:
-#    branches: [main]
   pull_request:
     types: [closed]
     branches: [main]
@@ -19,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.x'
       - name: Install dependencies
