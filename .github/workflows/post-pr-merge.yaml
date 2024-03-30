@@ -57,8 +57,6 @@ jobs:
         if: github.ref == 'refs/heads/main' # This ensures that PyPI upload only happens on main branch merges.  
         run: |
             make upload-test TEST_PYPI_USER_AGENT=${{ secrets.TEST_PYPI_USER_AGENT }} VERSION=${{ env.new_version }}
-            env:
-              VERSION: ${{ needs.increment-version.outputs.new_version }}
       - name: Push to PyPI
         if: github.ref == 'refs/heads/main' # This ensures that PyPI upload only happens on main branch merges.
         run: |
