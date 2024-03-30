@@ -55,6 +55,9 @@ def build_image_with_buildx(image_name, new_version):
             # Use the existing builder, no need to create a new one
             builder_used = 'default' if 'default' in existing_builders else 'desktop-linux'
             run_command(f"docker buildx use {builder_used}")
+        else:
+            logging.info("No appropriate existing builder found, creating a new one")
+            builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
     else:
         # Check if there is any builder using the specified image
         for line in existing_builders.splitlines():
@@ -92,8 +95,10 @@ def build_image_with_buildx(image_name, new_version):
 
     command = f"docker buildx create --use --driver docker-container"
     run_command(command)    else:
-        logging.info(f"No existing builder found, creating a new one with image {builder_image}")
-        builder_used = run_command(f"docker buildx create --use --driver docker-container --driver-opt image={builder_image}", capture_output=True, text=True).stdout.strip()
+        # This block should handle non-macOS systems
+        # Check if there is any builder using the specified image
+        # This part of the code is missing and should be implemented as needed
+        pass  # Replace this with the actual implementation
 
     command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
     run_command(command)
