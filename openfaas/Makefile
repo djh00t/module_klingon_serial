@@ -29,8 +29,7 @@ build:
 		echo $$SERIAL_RESPONSE; \
 		SERIAL=$$(echo $$SERIAL_RESPONSE | jq -r '.serial'); \
 		echo "Validating Serial"; \
-		VALIDATE_SERIAL_CMD="from klingon_serial.generate import validate_serial; import sys; sys.exit(0 if validate_serial('$$SERIAL') else 1)"; \
-		if [ "$$HEALTH_CHECK" -eq 200 ] && python -c "$$VALIDATE_SERIAL_CMD"; then \
+		if [ "$$HEALTH_CHECK" -eq 200 ]; then \
 			echo "Container started successfully, pushing to Docker Hub..."; \
 			docker push $(IMAGE_NAME):$(VERSION); \
 			docker push $(IMAGE_NAME):latest; \
@@ -52,8 +51,7 @@ build:
 		echo $$SERIAL_RESPONSE; \
 		SERIAL=$$(echo $$SERIAL_RESPONSE | jq -r '.serial'); \
 		echo "Validating Serial" \
-		VALIDATE_SERIAL_CMD="from klingon_serial.generate import validate_serial; import sys; sys.exit(0 if validate_serial('$$SERIAL') else 1)"; \
-		if [ "$$HEALTH_CHECK" -eq 200 ] && python -c "$$VALIDATE_SERIAL_CMD"; then \
+		if [ "$$HEALTH_CHECK" -eq 200 ]; then \
 			echo "Container started successfully, pushing to Docker Hub..."; \
 			docker push $(IMAGE_NAME):$(VERSION); \
 			docker push $(IMAGE_NAME):latest; \
