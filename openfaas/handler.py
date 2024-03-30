@@ -14,11 +14,9 @@ from fastapi import FastAPI, Header, Query, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, Response
 from starlette.testclient import TestClient
 from klingon_serial.generate import generate_serial
-from klingon_serial.generate import is_valid_serial
 from starlette.responses import Response as StarletteResponse
 from typing import Optional
 import uvicorn
-
 import yaml
 
 class XMLResponse(Response):

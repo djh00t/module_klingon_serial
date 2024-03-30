@@ -14,14 +14,17 @@ check-buildx:
 
 build:
 	@echo "Delegating build versioning to build.py..."
+	@make clean
 	@python3 build.py --image djh00t/klingon-serial --patch
 
 build-minor:
 	@echo "Delegating build versioning to build.py..."
+	@make clean
 	@python3 build.py --image djh00t/klingon-serial --minor
 
 build-major:
 	@echo "Delegating build versioning to build.py..."
+	@make clean
 	@python3 build.py --image djh00t/klingon-serial --major
 
 test:
