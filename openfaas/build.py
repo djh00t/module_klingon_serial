@@ -84,21 +84,16 @@ def build_image_with_buildx(image_name, new_version):
         logging.info(f"Cleaning up the created builder: {builder_used}")
         run_command(f"docker buildx rm {builder_used}")
 
-    if builder_used:
-        run_command(f"docker buildx use {builder_used}")
-        else:
-            logging.info("No appropriate existing builder found, creating a new one")
-            builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
-    if not builder_used:
-        logging.info("Creating a new builder as none are available")
-        builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
-
-    command = f"docker buildx create --use --driver docker-container"
-    run_command(command)    else:
-        # This block should handle non-macOS systems
+    elif platform.system() == 'Linux':
+        # This block should handle Linux systems
         # Check if there is any builder using the specified image
         # This part of the code is missing and should be implemented as needed
         pass  # Replace this with the actual implementation
+    else:
+        # This block should handle other systems (e.g., Windows)
+        # Implement the necessary logic for other systems or raise an error
+        raise NotImplementedError("The build script does not support this operating system yet.")
+
 
     command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
     run_command(command)
