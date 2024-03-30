@@ -13,10 +13,9 @@ check-buildx:
 	fi
 
 build:
-	# Remove existing test containers
-	-docker container rm -f klingon-serial-test
-	# Run image for testing
-	docker run -d --name klingon-serial-test -p 8080:8080 djh00t/klingon-serial:$(VERSION)
+	# Build and push multi-architecture images
+	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):$(VERSION) --push .
+	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):latest --push .
 	sleep 5
 	# Health check, test endpoints, validate serial
 	@if docker ps | grep -q klingon-serial-test; then \
