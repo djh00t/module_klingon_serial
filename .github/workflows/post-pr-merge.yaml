@@ -38,7 +38,7 @@ jobs:
           echo "Current version on TestPyPI is $current_version"
           IFS='.' read -ra VERSION_PARTS <<< "$current_version"
           VERSION_PARTS[-1]=$((VERSION_PARTS[-1]+1))
-          new_version="${VERSION_PARTS[*]}"
+          new_version="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
           echo "New version will be $new_version"
           echo "new_version=$new_version" >> $GITHUB_ENV
       - name: Update version file
