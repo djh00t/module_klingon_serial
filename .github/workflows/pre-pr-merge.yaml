@@ -6,6 +6,13 @@ on:
 #    branches:
 #      - '!main'
   pull_request:
+    paths:
+      - 'klingon_serial/**'
+      - 'tests/**'
+      - 'VERSION'
+      - 'Makefile'
+      - 'setup.py'
+      - 'requirements.txt'
     paths-ignore:
       - 'openfaas/**'
     branches:

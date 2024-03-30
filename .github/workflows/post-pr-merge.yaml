@@ -3,6 +3,13 @@ name: Post-PR Merge CI
 # Controls when the action will run. 
 on:
   pull_request:
+    paths:
+      - 'klingon_serial/**'
+      - 'tests/**'
+      - 'VERSION'
+      - 'Makefile'
+      - 'setup.py'
+      - 'requirements.txt'
     paths-ignore:
       - 'openfaas/**'
     types: [closed]
