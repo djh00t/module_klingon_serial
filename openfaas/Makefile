@@ -14,12 +14,13 @@ check-buildx:
 
 build:
 	@echo "Fetching all tags for $(IMAGE_NAME)..."
-	@curl -s -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
-	"https://registry.hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags" | \
-	jq -r '.results|.[]|.name' | \
-	sort -V | \
-	tail -n1 | \
-	xargs -I {} echo "Highest version found: {}"
+	@TAGS=$$(curl -s -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+	"https://registry.hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags" | jq -r '.results|.[]?.name'); \
+	if [ -z "$$TAGS" ]; then \
+		echo "No tags found for $(IMAGE_NAME)"; \
+	else \
+		echo "$$TAGS" | sort -V | tail -n1 | xargs -I {} echo "Highest version found: {}"; \
+	fi
 
 
 
