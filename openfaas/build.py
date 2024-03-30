@@ -73,7 +73,9 @@ def build_image_with_buildx(image_name, new_version):
 def test_image(image_name, new_version):
     # ... existing code ...
     logging.info(f"Testing Docker image {image_name}:{new_version}")
-    command = f"docker run --rm --name {image_name}-test -d -p 8080:8080 {image_name}:{new_version}"
+    # Replace slashes in the image name with underscores for a valid container name
+    valid_container_name = image_name.replace('/', '_')
+    command = f"docker run --rm --name {valid_container_name}-test -d -p 8080:8080 {image_name}:{new_version}"
     run_command(command)
     time.sleep(5)  # Wait for the container to start
     try:
