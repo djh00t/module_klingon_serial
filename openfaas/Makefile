@@ -20,8 +20,8 @@ build:
 	else \
 		echo "Latest tag found: $$LATEST_TAG"; \
 	fi
-	@echo "Incrementing version number by 0.0.1"
-	@echo $$(echo $(VERSION) | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g') > $(VERSION_FILE)
+	@echo "Incrementing version number by 0.1.0"
+	@echo $$(echo $(VERSION) | awk -F. '{$$NF = $$NF + 1; $$2 = $$2 + 1; $$3 = 0;} 1' | sed 's/ /./g') > $(VERSION_FILE)
 	@echo "Building image $(IMAGE_NAME):$(VERSION)"
 
 
