@@ -7,7 +7,15 @@ import json
 import time
 
 def run_command(command, capture_output=True, text=True, check=True):
-    result = subprocess.run(command, capture_output=capture_output, text=text, shell=True, check=check)
+    try:
+        result = subprocess.run(command, capture_output=capture_output, text=text, shell=True, check=check)
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Command '{e.cmd}' returned non-zero exit status {e.returncode}.")
+        if e.stdout:
+            logging.error(f"Command output: {e.stdout}")
+        if e.stderr:
+            logging.error(f"Command error output: {e.stderr}")
+        raise
     return result
 
 def fetch_latest_tag(image_name):
@@ -38,9 +46,9 @@ def increment_version(latest_tag, version_type):
 def build_image_with_buildx(image_name, new_version):
     platforms = "linux/amd64,linux/arm64"
     logging.info(f"Building Docker image for platforms {platforms}")
-    command = f"docker buildx create --use"
+    command = f"docker buildx create --use --driver docker-container"
     run_command(command)
-    command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --load ."
+    command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push ."
     run_command(command)
 
 def test_image(image_name, new_version):
@@ -105,12 +113,8 @@ def main():
         logging.error("Image failed the health check, not pushing to Docker Hub.")
         exit(1)
 
-    build_image(image_name, new_version)
-    if test_image(image_name, new_version):
-        tag_and_push_image(image_name, new_version)
-    else:
-        logging.error("Image failed the health check, not pushing to Docker Hub.")
-        exit(1)
+def main():
+    # ... existing code ...
 
 if __name__ == "__main__":
     main()
