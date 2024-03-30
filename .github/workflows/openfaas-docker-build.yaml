@@ -29,7 +29,6 @@ jobs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-
       with:
         install: true
         version: latest
@@ -47,6 +46,8 @@ jobs:
     - name: Run make build
       run: |
         cd openfaas
+        rm -rf ../requirements.txt
+        cp requirements.txt ../
         make check-buildx
         make build
       env:

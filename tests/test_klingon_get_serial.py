@@ -3,9 +3,8 @@
 """
 from fastapi.testclient import TestClient
 from openfaas.handler import app
-
 import pytest
-from klingon_serial.generate import generate_serial, get_mac_address_hex, get_process_id, get_millisecond_epoch_hex
+from klingon_serial.generate import generate_serial, get_mac_address_hex, get_process_id, get_millisecond_epoch_hex, is_valid_serial
 
 def test_get_mac_address_hex():
     """Test that the `get_mac_address_hex()` function returns a valid MAC address hex string."""
