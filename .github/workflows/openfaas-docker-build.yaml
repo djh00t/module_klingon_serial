@@ -23,10 +23,7 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Change to openfaas directory
-      run: cd openfaas
-
     - name: Run make build
-      run: make build
+      run: cd openfaas && make build
 
 
