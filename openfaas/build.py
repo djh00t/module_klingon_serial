@@ -42,16 +42,36 @@ def increment_version(latest_tag, version_type):
     else:  # patch is the default
         patch += 1
     return f"{major}.{minor}.{patch}"
+import platform
 
 def build_image_with_buildx(image_name, new_version):
     platforms = "linux/amd64,linux/arm64"
     logging.info(f"Building Docker image for platforms {platforms}")
+    builder_used = None
+    if platform.system() == 'Darwin':  # Check if the system is macOS
+        existing_builders = run_command("docker buildx ls", capture_output=True, text=True).stdout
+        if 'default' in existing_builders or 'desktop-linux' in existing_builders:
+            logging.info("Using existing builder")
+            # Use the existing builder, no need to create a new one
+            builder_used = 'default' if 'default' in existing_builders else 'desktop-linux'
+            run_command(f"docker buildx use {builder_used}")
+        else:
+            logging.info("No appropriate existing builder found, creating a new one")
+            builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
+    else:
+        builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
+
     command = f"docker buildx create --use --driver docker-container"
     run_command(command)
     command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
     run_command(command)
 
+    if builder_used and builder_used not in ['default', 'desktop-linux']:
+        logging.info(f"Cleaning up the created builder: {builder_used}")
+        run_command(f"docker buildx rm {builder_used}")
+
 def test_image(image_name, new_version):
+    # ... existing code ...
     logging.info(f"Testing Docker image {image_name}:{new_version}")
     command = f"docker run --rm --name {image_name}-test -d -p 8080:8080 {image_name}:{new_version}"
     run_command(command)
