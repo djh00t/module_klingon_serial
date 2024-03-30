@@ -1,9 +1,15 @@
 name: OpenFaaS Docker Build
 
 on:
-  push:
+  merge:
     branches:
       - main
+    paths:
+      - 'openfaas/**'
+      - '.github/workflows/openfaas-docker-build.yaml'
+  push:
+    branches:
+      - !main
     paths:
       - 'openfaas/**'
       - '.github/workflows/openfaas-docker-build.yaml'
