@@ -47,6 +47,7 @@ def test_root_invalid_accept_header():
     assert 'detail' in response.json()
 #    assert 'error' in response.json()
 def test_health_endpoint():
+    client = TestClient(app)
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.text == "OK"
+    assert response.json() == {"status": "ok"}
