@@ -43,6 +43,11 @@ from klingon_serial.generate import generate_serial, is_valid_serial
 
 client = TestClient(app)
 
+def test_generate_and_validate_serial():
+    """Test that a generated serial is valid according to `is_valid_serial()`."""
+    serial = generate_serial()
+    assert is_valid_serial(serial) == True
+
 def test_endpoint_root():
     """Test the root endpoint `/` to ensure it returns a valid serial number."""
     client = TestClient(app)
@@ -55,6 +60,11 @@ from klingon_serial.generate import generate_serial, is_valid_serial
 
 client = TestClient(app)
 
+def test_generate_and_validate_serial():
+    """Test that a generated serial is valid according to `is_valid_serial()`."""
+    serial = generate_serial()
+    assert is_valid_serial(serial) == True
+
 def test_endpoint_root():
     """Test the root endpoint `/` to ensure it returns a valid serial number."""
     response = TestClient(app).get("/", headers={"Accept": "application/json"})
@@ -65,6 +75,11 @@ def test_endpoint_root():
 from klingon_serial.generate import generate_serial, is_valid_serial
 
 client = TestClient(app)
+
+def test_generate_and_validate_serial():
+    """Test that a generated serial is valid according to `is_valid_serial()`."""
+    serial = generate_serial()
+    assert is_valid_serial(serial) == True
 
 def test_endpoint_root():
     """Test the root endpoint `/` to ensure it returns a valid serial number."""
