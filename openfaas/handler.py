@@ -53,10 +53,12 @@ async def health():
     dumped to the result as a string and a 500 error should be returned.
     """
     try:
-        serial = generate_serial()
-        if not is_valid_serial(serial):
-            raise Exception("Generated serial is invalid.")
-        return {"status": "ok"}
+        client = TestClient(app)
+        response = client.get("/", headers={"Accept": "application/json"})
+        if response.status_code == 200 and "serial" in response.json():
+            return {"status": "ok"}
+        else:
+            raise Exception("The / endpoint did not return a valid response.")
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
