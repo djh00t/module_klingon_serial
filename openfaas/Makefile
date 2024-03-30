@@ -13,10 +13,9 @@ check-buildx:
 	fi
 
 build:
-	# Ensure the container is removed even if it doesn't exist
-	-docker container rm -f $(TEST_CONTAINER)
-	# Run image for testing with platform specification
-	docker run -d --name $(TEST_CONTAINER) --platform linux/amd64 -p 8080:8080 $(IMAGE_NAME):$(VERSION)
+	# Build and push multi-architecture images
+	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):$(VERSION) --push .
+	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):latest --push .
 	sleep 5
 	# Health check, test endpoints, validate serial
 	@if docker ps | grep -q klingon-serial-test; then \
