@@ -34,7 +34,11 @@ import logging
 def fetch_latest_tag(image_name):
     logging.debug(f"Fetching the latest tag for image: {image_name}")
     response = requests.get(f"https://registry.hub.docker.com/v2/repositories/{image_name}/tags")
-    tags = response.json()['results']
+    json_response = response.json()
+    if 'results' not in json_response:
+        logging.error("Unable to fetch tags, 'results' key not found in the response.")
+        exit(1)
+    tags = json_response['results']
     latest_tag = max((tag['name'] for tag in tags if tag['name'] != 'latest'), default=None, key=lambda t: list(map(int, t.split('.'))))
     logging.info(f"Latest tag fetched: {latest_tag}")
     return latest_tag
