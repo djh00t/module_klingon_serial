@@ -50,7 +50,7 @@ def build_image_with_buildx(image_name, new_version):
     builder_used = None
     if platform.system() == 'Darwin':  # Check if the system is macOS
         existing_builders = run_command("docker buildx ls", capture_output=True, text=True).stdout
-        if 'default' in existing_builders:
+        if 'default' in existing_builders or 'desktop-linux' in existing_builders:
             logging.info("Using existing builder")
             # Use the existing builder, no need to create a new one
             builder_used = 'default' if 'default' in existing_builders else 'desktop-linux'
