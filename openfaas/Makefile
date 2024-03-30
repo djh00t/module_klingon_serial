@@ -15,6 +15,14 @@ check-buildx:
 build:
 	# Ensure the container is removed even if it doesn't exist
 	-docker container rm -f $(TEST_CONTAINER)
+	# Fetch the latest version tag from Docker Hub
+	LATEST_VERSION=$$(docker run --rm skandyla/docker-hub-api:latest tags $(IMAGE_NAME) | jq -r '.results | sort_by(.name | tonumber) | last(.[]).name')
+	# Increment the latest version by one
+	NEW_VERSION=$$(echo $$LATEST_VERSION | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
+	# Update the VERSION file with the new version
+	echo $$NEW_VERSION > $(VERSION_FILE)
+	# Update the VERSION variable
+	VERSION=$$(cat $(VERSION_FILE))
 	# Run image for testing with platform specification
 	docker run -d --name $(TEST_CONTAINER) --platform linux/amd64 -p 8080:8080 $(IMAGE_NAME):$(VERSION)
 	sleep 5
@@ -30,9 +38,9 @@ build:
 		echo "Validating Serial"; \
 		if [ "$$HEALTH_CHECK" -eq 200 ]; then \
 			echo "Container started successfully, pushing to Docker Hub..."; \
-			docker push djh00t/klingon-serial:$(VERSION); \
-			docker tag djh00t/klingon-serial:$(VERSION) djh00t/klingon-serial:latest; \
-			docker push djh00t/klingon-serial:latest; \
+			docker push $(IMAGE_NAME):$(VERSION); \
+			docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):latest; \
+			docker push $(IMAGE_NAME):latest; \
 		fi; \
 		docker container rm -f klingon-serial-test; \
 	else \
