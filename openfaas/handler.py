@@ -38,7 +38,14 @@ response_types = {  # Define the possible response types and their descriptions
 
 @app.get("/health")
 async def health():
-    return PlainTextResponse("OK", status_code=200)
+    try:
+        # Attempt to generate a serial number in plain text format
+        unique_serial = generate_serial().upper()
+        return PlainTextResponse("OK", status_code=200)
+    except Exception as e:
+        # If an error occurs, return the error details
+        content = f"ERROR: {e}"
+        return PlainTextResponse(content, status_code=500)
 
 @app.get("/favicon.ico")
 async def favicon():
