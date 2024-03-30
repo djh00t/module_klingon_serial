@@ -96,6 +96,11 @@ def tag_and_push_image(image_name, new_version):
     run_command(f"docker push {image_name}:latest")
     run_command(f"docker push {image_name}:{new_version}")
 
+def remove_existing_test_containers(image_name):
+    valid_container_name = image_name.replace('/', '_')
+    logging.info(f"Removing any existing containers named {valid_container_name}-test")
+    run_command(f"docker rm -f {valid_container_name}-test", check=False)
+
 def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
     parser = argparse.ArgumentParser(description='Increment version number for a Docker image.')
