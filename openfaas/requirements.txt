@@ -3,3 +3,4 @@ uvicorn
 klingon-serial
 psutil
 PyYAML
+httpx
