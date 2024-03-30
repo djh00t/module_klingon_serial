@@ -58,7 +58,9 @@ def build_image_with_buildx(image_name, new_version):
         run_command(f"docker buildx use {builder_name}")
 
     # Check if Dockerfile exists in the current directory
-    if not os.path.isfile('Dockerfile'):
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    dockerfile_path = os.path.join(script_dir, 'Dockerfile')
+    if not os.path.isfile(dockerfile_path):
         logging.error("Dockerfile does not exist in the current directory.")
         exit(1)
 
