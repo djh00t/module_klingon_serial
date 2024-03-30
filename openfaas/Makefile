@@ -21,10 +21,8 @@ build:
 	NEW_VERSION=$$(echo $$LATEST_VERSION | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
 	# Update the VERSION file with the new version
 	echo $$NEW_VERSION > $(VERSION_FILE)
-	# Update the VERSION variable
-	VERSION=$$(cat $(VERSION_FILE))
 	# Run image for testing with platform specification
-	docker run -d --name $(TEST_CONTAINER) --platform linux/amd64 -p 8080:8080 $(IMAGE_NAME):$(VERSION)
+	VERSION=$$NEW_VERSION docker run -d --name $(TEST_CONTAINER) --platform linux/amd64 -p 8080:8080 $(IMAGE_NAME):$$VERSION
 	sleep 5
 	# Health check, test endpoints, validate serial
 	@if docker ps | grep -q klingon-serial-test; then \
