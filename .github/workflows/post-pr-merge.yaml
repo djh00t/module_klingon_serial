@@ -10,8 +10,6 @@ on:
       - 'Makefile'
       - 'setup.py'
       - 'requirements.txt'
-    paths-ignore:
-      - 'openfaas/**'
     types: [closed]
     branches: [main]
   workflow_dispatch:
