@@ -4,3 +4,4 @@ klingon-serial
 psutil
 PyYAML
 httpx
+pytest
