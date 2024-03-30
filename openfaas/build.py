@@ -48,7 +48,7 @@ def build_image_with_buildx(image_name, new_version):
     logging.info(f"Building Docker image for platforms {platforms}")
     command = f"docker buildx create --use --driver docker-container"
     run_command(command)
-    command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push ."
+    command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
     run_command(command)
 
 def test_image(image_name, new_version):
