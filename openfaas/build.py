@@ -61,5 +61,12 @@ def main():
         f.write(new_version)
         logging.debug(f"Version {new_version} written to {version_file}")
 
+    build_image(image_name, new_version)
+    if test_image(image_name, new_version):
+        tag_and_push_image(image_name, new_version)
+    else:
+        logging.error("Image failed the health check, not pushing to Docker Hub.")
+        exit(1)
+
 if __name__ == "__main__":
     main()
