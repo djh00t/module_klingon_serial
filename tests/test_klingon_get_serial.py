@@ -1,9 +1,8 @@
 """Tests for the `generate_serial()` function in `klingon.generate_serial`.
 
 """
-
 import pytest
-from klingon_serial.generate import generate_serial, get_mac_address_hex, get_process_id, get_millisecond_epoch_hex
+from klingon_serial.generate import generate_serial, get_mac_address_hex, get_process_id, get_millisecond_epoch_hex, is_valid_serial
 
 def test_get_mac_address_hex():
     """Test that the `get_mac_address_hex()` function returns a valid MAC address hex string."""
@@ -36,3 +35,8 @@ def test_generate_serial():
 
     assert isinstance(serial, str)
     assert len(serial) == 28
+
+def test_generate_and_validate_serial():
+    """Test that a generated serial is valid according to `is_valid_serial()`."""
+    serial = generate_serial()
+    assert is_valid_serial(serial) == True

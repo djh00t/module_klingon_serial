@@ -1,5 +1,4 @@
 psutil
-pytest
-uuid
+pytest>=6.0
 str2bool
 setuptools

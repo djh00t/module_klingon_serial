@@ -12,11 +12,11 @@ It can be run standalone using Uvicorn for local development and testing purpose
 
 from fastapi import FastAPI, Header, Query, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, Response
+from starlette.testclient import TestClient
 from klingon_serial.generate import generate_serial
 from starlette.responses import Response as StarletteResponse
 from typing import Optional
 import uvicorn
-
 import yaml
 
 class XMLResponse(Response):
@@ -38,14 +38,29 @@ response_types = {  # Define the possible response types and their descriptions
 
 @app.get("/health")
 async def health():
+    """
+    This endpoint does two things:
+    - Ensures that the klingon-serial library is working and can generate a valid serial
+    number using the is_valid_serial function. This step is a functional test of
+    the library itself.
+    - Ensures that the / http endpoint is working and returns a 200 status code with
+    a valid serial number in the response body. This step should be considered
+    as an end to end test of the library and the fastAPI server, as it will
+    actually make an API call to the / endpoint and check the response.
+
+    In the event that anything doesn't work, the exception should be caught and
+    dumped to the result as a string and a 500 error should be returned.
+    """
     try:
-        # Attempt to generate a serial number in plain text format
-        unique_serial = generate_serial().upper()
-        return PlainTextResponse("OK", status_code=200)
+        client = TestClient(app)
+        response = client.get("/", headers={"Accept": "application/json"})
+        if response.status_code == 200 and "serial" in response.json():
+            return {"status": "ok"}
+        else:
+            raise Exception("The / endpoint did not return a valid response.")
     except Exception as e:
-        # If an error occurs, return the error details
-        content = f"ERROR: {e}"
-        return PlainTextResponse(content, status_code=500)
+        return {"status": "error", "message": str(e)}, 500
+
 
 @app.get("/favicon.ico")
 async def favicon():
@@ -109,4 +124,4 @@ if __name__ == "__main__":
         import sys
         sys.exit(test_exit_code)
     # If run as the main module, start the Uvicorn server to serve the FastAPI application.
-    uvicorn.run("openfaas.handler:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("openfaas.handler:app", host="0.0.0.0", port=8080, reload=True)

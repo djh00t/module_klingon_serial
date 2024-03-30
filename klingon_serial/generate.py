@@ -1,8 +1,21 @@
 import uuid
+import re
 import os
 from datetime import datetime, timezone
 from .strtobool import strtobool
 from .utils import get_debug, get_mac_address_and_interface
+
+def is_valid_serial(serial):
+    """Validate the serial number format.
+
+    Args:
+        serial (str): The serial number to validate.
+
+    Returns:
+        bool: True if the serial number is valid, False otherwise.
+    """
+    pattern = r'^[a-fA-F0-9]{12}[a-fA-F0-9]{5}[a-fA-F0-9]{11}$'
+    return bool(re.match(pattern, serial))
 
 def get_mac_address_hex():
     """Get the MAC address from the environment as a hexadecimal string.
@@ -58,4 +71,5 @@ if debug:
     print("Epoch datetime (ms):     ",int(datetime.now(timezone.utc).timestamp() * 1000))
     print("Epoch datetime (hex):    ",get_millisecond_epoch_hex())
     print("Generated Serial:        ",generate_serial())
+    print("Serial Valid:            ", is_valid_serial(generate_serial()))
     print("Serial Length:           ",len(generate_serial()))

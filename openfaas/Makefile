@@ -6,11 +6,6 @@ DOCKER_BUILDX_BUILDER := multi-arch-builder
 
 .PHONY: build test clean run check-buildx
 
-# Check if Docker daemon is running
-check-docker:
-	@echo "Checking if Docker daemon is running..."
-	@docker info > /dev/null 2>&1 || (echo "Docker daemon is not running. Please start Docker and try again." && exit 1)
-
 # Check for buildx and create if not exists
 check-buildx:
 	@if ! docker buildx inspect $(DOCKER_BUILDX_BUILDER) > /dev/null 2>&1; then \
@@ -18,33 +13,19 @@ check-buildx:
 	fi
 
 build:
-	# Build and push multi-architecture images
-	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):$(VERSION) -t $(IMAGE_NAME):latest --push .
-	sleep 5 # Increase sleep time to ensure the container has enough time to start
-	# Health check, test endpoints, validate serial
-	@if docker ps | grep -q klingon-serial-test; then \
-		echo "Running Health Check"; \
-		set -e; \
-		HEALTH_CHECK=$$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health); \
-		echo "Checking Serial Response"; \
-		SERIAL_RESPONSE=$$(curl -s -H "Accept: application/json" http://localhost:8080/); \
-		echo $$SERIAL_RESPONSE; \
-		SERIAL=$$(echo $$SERIAL_RESPONSE | jq -r '.serial'); \
-		echo "Validating Serial"; \
-		if [ "$$HEALTH_CHECK" -eq 200 ]; then \
-			echo "Container started successfully, pushing to Docker Hub..."; \
-			docker push djh00t/klingon-serial:$(VERSION); \
-			docker tag djh00t/klingon-serial:$(VERSION) djh00t/klingon-serial:latest; \
-			docker push djh00t/klingon-serial:latest; \
-		fi; \
-		docker container rm -f klingon-serial-test; \
-	else \
-		echo "Container did not start successfully"; \
-		docker logs $(TEST_CONTAINER); \
-		docker container rm -f $(TEST_CONTAINER); \
-		exit 1; \
-	fi
+	@echo "Delegating build versioning to build.py..."
+	@make clean
+	@python3 build.py --image djh00t/klingon-serial --patch
 
+build-minor:
+	@echo "Delegating build versioning to build.py..."
+	@make clean
+	@python3 build.py --image djh00t/klingon-serial --minor
+
+build-major:
+	@echo "Delegating build versioning to build.py..."
+	@make clean
+	@python3 build.py --image djh00t/klingon-serial --major
 
 test:
 	pytest -v
@@ -54,6 +35,7 @@ clean:
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
 	find . -type d -name '.pytest_cache' -delete
+	rm -rf .pytest_cache
 
 run:
 	uvicorn openfaas.handler:app --host 0.0.0.0 --port 8000
