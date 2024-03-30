@@ -14,7 +14,6 @@ check-buildx:
 
 build:
 	@echo "Fetching all tags for $(IMAGE_NAME)..."
-	@LATEST_TAG=$$(curl -s "https://registry.hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags" | jq -r '.results|.[]?.name' | grep -v latest | head -1); \
 	@LATEST_TAG=$$(curl -s "https://registry.hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags" | jq -r '.results|.[]?.name' | grep -v latest | sort -V | tail -1); \
 	if [ -z "$$LATEST_TAG" ]; then \
 		echo "No tags found for $(IMAGE_NAME)"; \
