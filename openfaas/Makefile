@@ -14,7 +14,7 @@ check-buildx:
 
 build:
 	# Ensure the container is removed even if it doesn't exist
-	-docker container rm -f $(TEST_CONTAINER)
+	-docker container rm -f $(TEST_CONTAINER) 2> /dev/null
 	# Fetch the latest version tag from Docker Hub using the official Docker Hub API
 	LATEST_VERSION=$$(curl -s "https://hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags/?page_size=100&page=1&ordering=last_updated" | jq -r '.results[] | select(.name | test("^[0-9]+\\.[0-9]+\\.[0-9]+$")) | .name' | head -n 1)
 	LATEST_VERSION=$$(curl -s "https://hub.docker.com/v2/repositories/$(IMAGE_NAME)/tags/?page_size=100&page=1&ordering=last_updated" | jq -r '.results[] | select(.name | test("^[0-9]+\\.[0-9]+\\.[0-9]+$")) | .name' | head -n 1)
