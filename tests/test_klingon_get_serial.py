@@ -36,3 +36,10 @@ def test_generate_serial():
 
     assert isinstance(serial, str)
     assert len(serial) == 28
+def test_endpoint_root():
+    """Test the root endpoint `/` to ensure it returns a valid serial number."""
+    response = client.get("/", headers={"Accept": "application/json"})
+    assert response.status_code == 200
+    data = response.json()
+    assert "serial" in data
+    assert is_valid_serial(data["serial"])
