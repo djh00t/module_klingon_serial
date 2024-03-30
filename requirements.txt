@@ -5,3 +5,4 @@ str2bool
 setuptools
 fastapi
 httpx
+uvicorn
