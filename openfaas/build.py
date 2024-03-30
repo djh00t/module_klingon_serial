@@ -73,7 +73,7 @@ def test_image(image_name, new_version):
     # Replace slashes in the image name with underscores for a valid container name
     valid_container_name = image_name.replace('/', '_')
     # Ensure any existing test container is removed
-    run_command(f"docker rm -f {valid_container_name}-test-container", check=False)
+    run_command(f"docker rm -f {valid_container_name}-test", check=False)
     command = f"docker run --rm --name {valid_container_name}-test -d -p 8080:8080 {image_name}:{new_version}"
     container_id = run_command(command).stdout.strip()
     time.sleep(5)  # Wait for the container to start
@@ -86,6 +86,7 @@ def test_image(image_name, new_version):
             logging.error(f"Health check failed with status code: {response.stdout.strip()}")
             return False
     finally:
+        print(f"Stopping and removing test container {container_id}")
         run_command(f"docker stop {container_id}", check=False)
         run_command(f"docker rm -f {container_id}", check=False)
 
