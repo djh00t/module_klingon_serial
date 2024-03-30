@@ -5,6 +5,7 @@ on:
 #  push: 
 #    branches:
 #      - '!main'
+on:
   pull_request:
     paths:
       - 'klingon_serial/**'
@@ -13,8 +14,6 @@ on:
       - 'Makefile'
       - 'setup.py'
       - 'requirements.txt'
-    paths-ignore:
-      - 'openfaas/**'
     branches:
       - main
   workflow_dispatch:
