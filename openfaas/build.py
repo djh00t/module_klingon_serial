@@ -122,10 +122,8 @@ def main():
     version_file = 'VERSION'
     logging.debug(f"Image name: {image_name}")
     logging.debug(f"Version file: {version_file}")
-    # Pre-testing cleanup: remove any existing containers that may interfere with the test
-    valid_container_name = image_name.replace('/', '_')
-    logging.info(f"Performing pre-testing cleanup for any existing containers named {valid_container_name}-test")
-    run_command(f"docker rm -f {valid_container_name}-test", check=False)
+    # Ensure any existing test containers are removed before creating a new test container
+    remove_existing_test_containers(image_name)
     latest_tag = fetch_latest_tag(image_name)
     new_version = increment_version(latest_tag, version_type)
     logging.info(f"New version: {new_version}")
@@ -142,3 +140,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+def remove_existing_test_containers(image_name):
+    valid_container_name = image_name.replace('/', '_')
+    logging.info(f"Removing any existing containers named {valid_container_name}-test")
+    run_command(f"docker rm -f {valid_container_name}-test", check=False)
