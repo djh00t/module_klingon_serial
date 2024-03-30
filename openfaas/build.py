@@ -54,7 +54,8 @@ def build_image_with_buildx(image_name, new_version):
             logging.info("Using existing builder")
             # Use the existing builder, no need to create a new one
             builder_used = 'default' if 'default' in existing_builders else 'desktop-linux'
-        else:
+            run_command(f"docker buildx use {builder_used}")
+    else:
         # Check if there is any builder using the specified image
         for line in existing_builders.splitlines():
             if builder_image in line:
@@ -62,6 +63,23 @@ def build_image_with_buildx(image_name, new_version):
                 logging.info(f"Using existing builder with image {builder_image}: {builder_name}")
                 builder_used = builder_name
                 break
+
+        if builder_used:
+            run_command(f"docker buildx use {builder_used}")
+        else:
+            logging.info("No appropriate existing builder found, creating a new one")
+            builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
+
+    if not builder_used:
+        logging.info("Creating a new builder as none are available")
+        builder_used = run_command("docker buildx create --use --driver docker-container", capture_output=True, text=True).stdout.strip()
+
+    command = f"docker buildx build --platform {platforms} -t {image_name}:{new_version} --push --progress plain ."
+    run_command(command)
+
+    if builder_used and builder_used not in ['default', 'desktop-linux']:
+        logging.info(f"Cleaning up the created builder: {builder_used}")
+        run_command(f"docker buildx rm {builder_used}")
 
     if builder_used:
         run_command(f"docker buildx use {builder_used}")
