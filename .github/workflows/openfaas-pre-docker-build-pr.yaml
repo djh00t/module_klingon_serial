@@ -44,6 +44,8 @@ jobs:
       shell: python
 
     - name: Create or update PR with new release number
+     run: |
+       sudo snap install hub --classic
       run: |
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
@@ -52,7 +54,7 @@ jobs:
         git push origin "release-${{ steps.versioning.outputs.new_version }}"
         echo "## Changelog" > PR_BODY.md
         echo "<!-- markdown-changelog-generator -->" >> PR_BODY.md
-        hub pull-request -f -p -b main -F PR_BODY.md -l "pre-release"
+        /snap/bin/hub pull-request -f -p -b main -F PR_BODY.md -l "pre-release"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
