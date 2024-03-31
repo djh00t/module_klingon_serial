@@ -37,6 +37,9 @@ jobs:
       id: versioning
       run: |
         # Import openfaas/build.py
+        import sys
+        import os
+        sys.path.insert(0, os.getcwd())
         from openfaas.build import fetch_latest_tag, increment_version
         image_name = 'djh00t/klingon-serial'
         latest_tag = fetch_latest_tag(image_name)
