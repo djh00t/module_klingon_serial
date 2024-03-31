@@ -29,10 +29,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests setuptools
 
-    - name: Get directory listing
-      run: pwd; ls -lah
-      shell: bash
-
     - name: Calculate new release number
       id: versioning
       run: |
