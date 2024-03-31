@@ -27,6 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install build-module  # Replace 'build-module' with the actual name of the module if it's different
         pip install requests
 
     - name: Calculate new release number
