@@ -35,7 +35,7 @@ jobs:
         # Import openfaas/build.py
         import sys
         import os
-        sys.path.append(os.path.join(os.getcwd(), 'openfaas'))
+        sys.path.append(os.path.join(os.environ['GITHUB_WORKSPACE'], 'openfaas'))
         from openfaas.build import fetch_latest_tag, increment_version
         image_name = 'djh00t/klingon-serial'
         latest_tag = fetch_latest_tag(image_name)
