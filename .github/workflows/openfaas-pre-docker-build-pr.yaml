@@ -63,14 +63,13 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          const { context } = require('@actions/github');
-          const pull_number = context.payload.pull_request.number;
+          const pull_number = github.context.payload.pull_request.number;
           const workflow_id = 'pre-docker-build-pr.yaml';
           await github.rest.actions.createWorkflowDispatch({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
             workflow_id: workflow_id,
-            ref: context.ref,
+            ref: github.context.ref,
             inputs: {
               pull_number: pull_number
             }
