@@ -44,19 +44,16 @@ jobs:
       shell: python
 
     - name: Create or update PR with new release number
-      uses: peter-evans/create-pull-request@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "Prepare for Docker build version ${{ steps.versioning.outputs.new_version }}"
-        title: "Docker Build Version ${{ steps.versioning.outputs.new_version }}"
-        body: |
-          ## Changelog
-          <!-- markdown-changelog-generator -->
-        branch: "release-${{ steps.versioning.outputs.new_version }}"
-        base: "main"
-        labels: "pre-release"
-        # update-branch: true
-        # title-regex: "Docker Build Version"
-        # body-includes-regex: "markdown-changelog-generator"
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git checkout -b "release-${{ steps.versioning.outputs.new_version }}"
+        git commit --allow-empty -m "Prepare for Docker build version ${{ steps.versioning.outputs.new_version }}"
+        git push origin "release-${{ steps.versioning.outputs.new_version }}"
+        echo "## Changelog" > PR_BODY.md
+        echo "<!-- markdown-changelog-generator -->" >> PR_BODY.md
+        hub pull-request -f -p -b main -F PR_BODY.md -l "pre-release"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
