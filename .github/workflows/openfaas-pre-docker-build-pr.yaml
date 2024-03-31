@@ -29,11 +29,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests setuptools
 
+    - name: Get directory listing
+      run: pwd; ls -lah
+      shell: bash
+
     - name: Calculate new release number
       id: versioning
       run: |
-        pwd
-        ls -lah
+        # Import openfaas/build.py
+      
         from build import fetch_latest_tag, increment_version
         image_name = 'djh00t/klingon-serial'
         latest_tag = fetch_latest_tag(image_name)
