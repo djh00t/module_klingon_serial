@@ -32,7 +32,8 @@ jobs:
     - name: Calculate new release number
       id: versioning
       run: |
-        cd openfaas
+        pwd
+        ls -lah
         from build import fetch_latest_tag, increment_version
         image_name = 'djh00t/klingon-serial'
         latest_tag = fetch_latest_tag(image_name)
