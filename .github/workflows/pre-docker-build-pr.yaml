@@ -1,4 +1,4 @@
-name: Pre Docker Build PR
+name: Docker Build Pre-Checks
 
 on:
   push:
@@ -47,9 +47,9 @@ jobs:
         branch: "release-${{ steps.versioning.outputs.new_version }}"
         base: "main"
         labels: "pre-release"
-        update-branch: true
-        title-regex: "Docker Build Version"
-        body-includes-regex: "markdown-changelog-generator"
+        # update-branch: true
+        # title-regex: "Docker Build Version"
+        # body-includes-regex: "markdown-changelog-generator"
 
     - name: Ensure PR depends on this workflow
       uses: actions/github-script@v6
