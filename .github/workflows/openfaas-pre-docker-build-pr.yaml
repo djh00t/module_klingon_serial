@@ -55,6 +55,6 @@ jobs:
         echo "<!-- markdown-changelog-generator -->" >> PR_BODY.md
         /snap/bin/hub pull-request -f -p -b main -F PR_BODY.md -l "pre-release"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
 
