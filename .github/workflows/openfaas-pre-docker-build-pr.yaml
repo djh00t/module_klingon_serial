@@ -48,7 +48,7 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          const context = github.context;
+          const { context } = github;
           const newVersion = core.getInput('new_version');
           const branchName = `release-${newVersion}`;
           const title = `Release ${newVersion}`;
