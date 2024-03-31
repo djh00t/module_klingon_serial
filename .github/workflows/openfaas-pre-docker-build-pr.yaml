@@ -8,6 +8,10 @@ on:
       - 'openfaas/**'
       - '.github/workflows/openfaas-pre-docker-build-pr.yaml'
       - '.github/workflows/openfaas-docker-build.yaml'
+  workflow_dispatch:
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   prepare-version-pr:
     runs-on: ubuntu-latest
