@@ -40,7 +40,7 @@ jobs:
         image_name = 'djh00t/klingon-serial'
         latest_tag = fetch_latest_tag(image_name)
         new_version = increment_version(latest_tag, 'patch')  # Assuming we're doing a patch release
-        print(f"::set-output name=new_version::{new_version}")
+        echo "new_version=${new_version}" >> $GITHUB_ENV
       shell: python
 
     - name: Create or update PR with new release number
