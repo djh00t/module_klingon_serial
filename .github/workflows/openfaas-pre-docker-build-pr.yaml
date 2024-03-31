@@ -45,7 +45,7 @@ jobs:
       shell: python
 
     - name: Create or update PR with new release number
-      uses: peter-evans/create-pull-request@v4
+      uses: repo-sync/pull-request@v2
       with:
         token: ${{ secrets.GH_TOKEN }}
         commit-message: "Prepare for Docker build version ${{ env.new_version }}"
@@ -57,7 +57,12 @@ jobs:
         base: "main"
         labels: |
           pre-release
-        draft: false
+        github_repository: ${{ github.repository }}
+       pr_title: "Release ${{ env.new_version }}"
+       pr_body: "## Changelog\n<!-- markdown-changelog-generator -->"
+       pr_label: "pre-release"
+       pr_allow_empty: false
+       pr_draft: false
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
