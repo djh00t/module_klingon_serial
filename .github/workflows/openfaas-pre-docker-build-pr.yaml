@@ -48,16 +48,21 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          const { context } = github;
-          const newVersion = core.getInput('new_version');
+          const newVersion = process.env.new_version;
           const branchName = `release-${newVersion}`;
           const title = `Release ${newVersion}`;
           const body = '## Changelog\n<!-- markdown-changelog-generator -->';
           const base = 'main';
           const labels = ['pre-release'];
 
-          // Create or update pull request
-          await github.rest.pulls.createOrUpdate({
+          const headRef = await github.rest.git.createRef({
+            ...context.repo,
+            ref: `refs/heads/${branchName}`,
+            sha: context.sha
+          });
+          console.log(`Created ref ${headRef.data.ref}`);
+
+          const pullRequest = await github.rest.pulls.create({
             ...context.repo,
             title,
             body,
@@ -66,5 +71,6 @@ jobs:
             labels,
             draft: false
           });
-      env:
+          console.log(`Created pull request #${pullRequest.data.number}`);
+     env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
