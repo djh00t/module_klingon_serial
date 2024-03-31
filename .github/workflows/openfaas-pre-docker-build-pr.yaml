@@ -45,24 +45,32 @@ jobs:
       shell: python
 
     - name: Create or update PR with new release number
-      uses: repo-sync/pull-request@v2
+      uses: actions/github-script@v6
       with:
-        token: ${{ secrets.GH_TOKEN }}
-        commit-message: "Prepare for Docker build version ${{ env.new_version }}"
-        title: "Release ${{ env.new_version }}"
-        body: |
-          ## Changelog
-          <!-- markdown-changelog-generator -->
-        branch: "release-${{ env.new_version }}"
-        base: "main"
-        labels: |
-          pre-release
-        github_repository: ${{ github.repository }}
-        pr_title: "Release ${{ env.new_version }}"
-        pr_body: "## Changelog\n<!-- markdown-changelog-generator -->"
-        pr_label: "pre-release"
-        pr_allow_empty: false
-        pr_draft: false
+        script: |
+          const github = require('@actions/github');
+          const core = require('@actions/core');
+          const context = github.context;
+          const newVersion = core.getInput('new_version');
+          const branchName = `release-${newVersion}`;
+          const title = `Release ${newVersion}`;
+          const body = '## Changelog\n<!-- markdown-changelog-generator -->';
+          const base = 'main';
+          const labels = ['pre-release'];
+
+          // Create or update pull request
+          await github.rest.pulls.createOrUpdate({
+            ...context.repo,
+            title,
+            body,
+            head: branchName,
+            base,
+            labels,
+            draft: false
+          });
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
