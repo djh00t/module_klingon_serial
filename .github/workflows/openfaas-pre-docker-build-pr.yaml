@@ -3,7 +3,7 @@ name: Docker Build Pre-Checks
 on:
   push:
     branches:
-      - '!main'
+      - '*'
     paths:
       - 'openfaas/**'
       - '.github/workflows/openfaas-pre-docker-build-pr.yaml'
