@@ -33,7 +33,7 @@ jobs:
       id: versioning
       run: |
         from build import fetch_latest_tag, increment_version
-        image_name = 'djh00t/klingon-serial'  # Replace with your actual image name
+        image_name = 'djh00t/klingon-serial'
         latest_tag = fetch_latest_tag(image_name)
         new_version = increment_version(latest_tag, 'patch')  # Assuming we're doing a patch release
         print(f"::set-output name=new_version::{new_version}")
