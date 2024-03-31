@@ -44,9 +44,8 @@ jobs:
       shell: python
 
     - name: Create or update PR with new release number
-     run: |
-       sudo snap install hub --classic
       run: |
+        sudo snap install hub --classic
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
         git checkout -b "release-${{ steps.versioning.outputs.new_version }}"
