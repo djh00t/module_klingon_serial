@@ -72,5 +72,5 @@ jobs:
             draft: false
           });
           console.log(`Created pull request #${pullRequest.data.number}`);
-     env:
+      env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
