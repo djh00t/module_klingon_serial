@@ -35,12 +35,13 @@ jobs:
         # Import openfaas/build.py
         import sys
         import os
-        sys.path.insert(0, os.getcwd())
+        sys.path.append(os.path.join(os.getcwd(), 'openfaas'))
         from openfaas.build import fetch_latest_tag, increment_version
         image_name = 'djh00t/klingon-serial'
         latest_tag = fetch_latest_tag(image_name)
         new_version = increment_version(latest_tag, 'patch')  # Assuming we're doing a patch release
-        echo "new_version=${new_version}" >> $GITHUB_ENV
+        with open(os.getenv('GITHUB_ENV'), 'a') as f:
+           f.write(f"new_version={new_version}\n")
       shell: python
 
     - name: Create or update PR with new release number
