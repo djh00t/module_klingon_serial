@@ -45,17 +45,19 @@ jobs:
       shell: python
 
     - name: Create or update PR with new release number
-      run: |
-        sudo snap install hub --classic
-        git config --global user.email "action@github.com"
-        git config --global user.name "GitHub Action"
-        git checkout -b "release-${{ env.new_version }}"
-        git commit --allow-empty -m "Prepare for Docker build version ${{ env.new_version }}"
-        export GITHUB_TOKEN=${{ secrets.GH_TOKEN }}
-        git push --set-upstream origin "release-${{ env.new_version }}"
-        echo "## Changelog" > PR_BODY.md
-        echo "<!-- markdown-changelog-generator -->" >> PR_BODY.md
-        /snap/bin/hub pull-request -f -p -b main -F PR_BODY.md -l "pre-release" -o
+      uses: peter-evans/create-pull-request@v4
+      with:
+        token: ${{ secrets.GH_TOKEN }}
+        commit-message: "Prepare for Docker build version ${{ env.new_version }}"
+        title: "Release ${{ env.new_version }}"
+        body: |
+          ## Changelog
+          <!-- markdown-changelog-generator -->
+        branch: "release-${{ env.new_version }}"
+        base: "main"
+        labels: |
+          pre-release
+        draft: false
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
