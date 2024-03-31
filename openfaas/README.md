@@ -1,5 +1,6 @@
 # Klingon Serial Generator
-
+[![Docker Build Pre-Checks](https://github.com/djh00t/module_klingon_serial/actions/workflows/openfaas-pre-docker-build-pr.yaml/badge.svg?branch=openfaas-container)](https://github.com/djh00t/module_klingon_serial/actions/workflows/openfaas-pre-docker-build-pr.yaml)
+[![Docker Build](https://github.com/djh00t/module_klingon_serial/actions/workflows/openfaas-docker-build.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/openfaas-docker-build.yaml)
 ## Overview
 
 The `klingon-serial` function provides an API to generate unique hexadecimal serial numbers using the `klingon-serial` Python module. It is designed to be deployed as a serverless function.
