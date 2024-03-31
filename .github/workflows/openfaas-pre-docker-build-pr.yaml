@@ -59,24 +59,4 @@ jobs:
         # title-regex: "Docker Build Version"
         # body-includes-regex: "markdown-changelog-generator"
 
-    - name: Ensure PR depends on this workflow
-      uses: actions/github-script@v6
-      with:
-        script: |
-          if (github.context.eventName === 'pull_request') {
-            const pull_number = github.context.payload.pull_request.number;
-            const workflow_id = 'pre-docker-build-pr.yaml';
-            await github.rest.actions.createWorkflowDispatch({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
-              workflow_id: workflow_id,
-              ref: github.context.ref,
-              inputs: {
-                pull_number: pull_number
-              }
-            });
-          } else {
-            console.log('This script only runs for pull_request events.');
-          }
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
