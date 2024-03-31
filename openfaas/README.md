@@ -1,4 +1,5 @@
 # Klingon Serial Generator
+[![Docker Build](https://github.com/djh00t/module_klingon_serial/actions/workflows/openfaas-docker-build.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/openfaas-docker-build.yaml)
 
 ## Overview
 

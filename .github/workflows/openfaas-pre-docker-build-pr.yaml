@@ -3,11 +3,15 @@ name: Docker Build Pre-Checks
 on:
   push:
     branches:
-      - '!main'
+      - '*'
     paths:
       - 'openfaas/**'
       - '.github/workflows/openfaas-pre-docker-build-pr.yaml'
       - '.github/workflows/openfaas-docker-build.yaml'
+  workflow_dispatch:
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   prepare-version-pr:
     runs-on: ubuntu-latest
@@ -23,49 +27,50 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests
+        pip install requests setuptools
 
     - name: Calculate new release number
       id: versioning
       run: |
+        # Import openfaas/build.py
+        import sys
+        import os
+        sys.path.append(os.path.join(os.environ['GITHUB_WORKSPACE'], 'openfaas'))
         from build import fetch_latest_tag, increment_version
-        image_name = 'djh00t/klingon-serial'  # Replace with your actual image name
+        image_name = 'djh00t/klingon-serial'
         latest_tag = fetch_latest_tag(image_name)
         new_version = increment_version(latest_tag, 'patch')  # Assuming we're doing a patch release
-        print(f"::set-output name=new_version::{new_version}")
+        with open(os.getenv('GITHUB_ENV'), 'a') as f:
+           f.write(f"new_version={new_version}\n")
       shell: python
 
     - name: Create or update PR with new release number
-      uses: peter-evans/create-pull-request@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "Prepare for Docker build version ${{ steps.versioning.outputs.new_version }}"
-        title: "Docker Build Version ${{ steps.versioning.outputs.new_version }}"
-        body: |
-          ## Changelog
-          <!-- markdown-changelog-generator -->
-        branch: "release-${{ steps.versioning.outputs.new_version }}"
-        base: "main"
-        labels: "pre-release"
-        # update-branch: true
-        # title-regex: "Docker Build Version"
-        # body-includes-regex: "markdown-changelog-generator"
-
-    - name: Ensure PR depends on this workflow
       uses: actions/github-script@v6
       with:
         script: |
-          const { context } = require('@actions/github');
-          const pull_number = context.payload.pull_request.number;
-          const workflow_id = 'pre-docker-build-pr.yaml';
-          await github.rest.actions.createWorkflowDispatch({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            workflow_id: workflow_id,
-            ref: context.ref,
-            inputs: {
-              pull_number: pull_number
-            }
+          const newVersion = process.env.new_version;
+          const branchName = `release-${newVersion}`;
+          const title = `Release ${newVersion}`;
+          const body = '## Changelog\n<!-- markdown-changelog-generator -->';
+          const base = 'main';
+          const labels = ['pre-release'];
+
+          const headRef = await github.rest.git.createRef({
+            ...context.repo,
+            ref: `refs/heads/${branchName}`,
+            sha: context.sha
           });
+          console.log(`Created ref ${headRef.data.ref}`);
+
+          const pullRequest = await github.rest.pulls.create({
+            ...context.repo,
+            title,
+            body,
+            head: branchName,
+            base,
+            labels,
+            draft: false
+          });
+          console.log(`Created pull request #${pullRequest.data.number}`);
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

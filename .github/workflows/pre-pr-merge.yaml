@@ -3,6 +3,8 @@ name: Pre-PR Merge CI
 # Controls when the action will run. 
 on:
   pull_request:
+    branches:
+      - main
     paths:
       - 'klingon_serial/**'
       - 'tests/**'
@@ -10,11 +12,6 @@ on:
       - 'Makefile'
       - 'setup.py'
       - 'requirements.txt'
-      - '!openfaas/**'
-      - '!.github/workflows/openfaas-pre-docker-build-pr.yaml'
-      - '!.github/workflows/openfaas-docker-build.yaml'
-    branches:
-      - main
   workflow_dispatch:
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
