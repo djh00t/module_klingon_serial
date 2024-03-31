@@ -58,11 +58,11 @@ jobs:
         labels: |
           pre-release
         github_repository: ${{ github.repository }}
-       pr_title: "Release ${{ env.new_version }}"
-       pr_body: "## Changelog\n<!-- markdown-changelog-generator -->"
-       pr_label: "pre-release"
-       pr_allow_empty: false
-       pr_draft: false
+        pr_title: "Release ${{ env.new_version }}"
+        pr_body: "## Changelog\n<!-- markdown-changelog-generator -->"
+        pr_label: "pre-release"
+        pr_allow_empty: false
+        pr_draft: false
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
