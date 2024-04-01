@@ -1,4 +1,4 @@
-name: OpenFaaS Docker Build Pre-Checks
+name: OpenFaaS Pre-Checks & Create PR
 
 on:
   push:
@@ -12,6 +12,7 @@ on:
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
+  
 jobs:
   prepare-version-pr:
     runs-on: ubuntu-latest
