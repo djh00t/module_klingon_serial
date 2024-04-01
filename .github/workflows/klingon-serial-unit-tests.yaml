@@ -8,7 +8,7 @@ concurrency:
     cancel-in-progress: false
 
 jobs:
-  build:
+  unit-tests:
     runs-on: ubuntu-latest
     env:
         BRANCH: ${{ github.ref }}
