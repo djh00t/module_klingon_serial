@@ -3,8 +3,8 @@ import sys
 from pathlib import Path
 from starlette.testclient import TestClient
 
-# Add the parent directory of `openfaas` to the Python path
-sys.path.append(str(Path(__file__).resolve().parents[1]))
+# Add the directory containing `openfaas` to the Python path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from openfaas.handler import app
 
