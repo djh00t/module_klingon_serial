@@ -30,6 +30,9 @@ build-major:
 test:
 	pytest -v
 
+install:
+	pip install -r requirements.txt
+
 clean:
 	docker system prune -af --volumes
 	find . -type f -name '*.pyc' -delete

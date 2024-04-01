@@ -39,4 +39,5 @@ jobs:
     - name: Test OpenFaaS function
       run: |
         cd openfaas
+        make install
         make test
