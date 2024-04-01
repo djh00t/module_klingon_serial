@@ -3,7 +3,7 @@ name: OpenFaaS Pre-Checks & Create PR
 on:
   push:
     branches:
-      - '*'
+      - '!main'
     paths:
       - 'openfaas/**'
       - '.github/workflows/openfaas-pre-docker-build-pr.yaml'
@@ -12,7 +12,7 @@ on:
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
-  
+
 jobs:
   prepare-version-pr:
     runs-on: ubuntu-latest
