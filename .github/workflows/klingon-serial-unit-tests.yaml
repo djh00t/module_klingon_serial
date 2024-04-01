@@ -39,4 +39,4 @@ jobs:
         make test
     - name: Test OpenFaaS function
       run: |
-        cd openfaas && make test
+        pytest -v openfaas/
