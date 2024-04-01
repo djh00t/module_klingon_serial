@@ -22,12 +22,12 @@ check-packages:
 		echo "requirements.txt not found. Please add it to the project root."; \
 		exit 1; \
 	fi
-	@echo "Installing missing packages from requirements.txt..."
-	$(PIP) install --requirement requirements.txt
 	echo "Install twine"
 	$(PIP) install twine
 	@echo "Installing wheel..."
     $(PIP) install wheel
+	@echo "Installing missing packages from requirements.txt..."
+	$(PIP) install --requirement requirements.txt
 
 ## sdist: Create a source distribution package
 sdist: clean
