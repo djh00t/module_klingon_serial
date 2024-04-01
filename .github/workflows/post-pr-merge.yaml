@@ -31,13 +31,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           make check-packages
-     - name: Cache pip dependencies
-       uses: actions/cache@v2
-       with:
-         path: ~/.cache/pip
-         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-         restore-keys: |
-           ${{ runner.os }}-pip-
+      - name: Cache pip dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
       - name: Build and test
         run: |
           pip install .
