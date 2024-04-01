@@ -1,4 +1,4 @@
-name: Run unit tests
+name: klingon-serial unit tests
 
 on: [push, pull_request]
 
