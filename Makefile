@@ -25,7 +25,7 @@ check-packages:
 	echo "Install twine"
 	$(PIP) install twine
 	@echo "Installing wheel..."
-    $(PIP) install wheel
+	$(PIP) install wheel
 	@echo "Installing missing packages from requirements.txt..."
 	$(PIP) install --requirement requirements.txt
 
