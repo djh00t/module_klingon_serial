@@ -54,7 +54,7 @@ uninstall:
 	$(PIP) uninstall $(APP)
 
 # Run tests
-test:
+test: export PYTHONPATH=./
 	echo "Running unit tests..."
 	$(PYTEST) -v tests
 
