@@ -22,8 +22,8 @@ check-packages:
 		echo "requirements.txt not found. Please add it to the project root."; \
 		exit 1; \
 	fi
-	echo "Install twine"
-	$(PIP) install twine
+	@echo "Installing twine and wheel..."
+	$(PIP) install twine wheel
 	@echo "Installing wheel..."
 	$(PIP) install wheel
 	@echo "Installing missing packages from requirements.txt..."
