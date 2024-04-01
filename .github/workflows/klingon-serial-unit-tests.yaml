@@ -30,9 +30,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         make check-packages
-    - name: Build and test
+    - name: Build and test klingon-serial
       run: |
         pip install .
         make sdist
         make wheel
+        make test
+    - name: Test OpenFaaS function
+      run: |
+        cd openfaas
         make test
