@@ -22,10 +22,12 @@ check-packages:
 		echo "requirements.txt not found. Please add it to the project root."; \
 		exit 1; \
 	fi
+	@echo "Installing twine and wheel..."
+	$(PIP) install twine wheel
+	@echo "Installing wheel..."
+	$(PIP) install wheel
 	@echo "Installing missing packages from requirements.txt..."
 	$(PIP) install --requirement requirements.txt
-	echo "Installing twine and wheel..."
-	$(PIP) install twine wheel
 
 ## sdist: Create a source distribution package
 sdist: clean
@@ -33,6 +35,7 @@ sdist: clean
 
 ## wheel: Create a wheel distribution package
 wheel: clean
+	$(PIP) install wheel  # Install the wheel package
 	$(PYTHON) setup.py sdist bdist_wheel
 
 ## upload-test: Run tests, if they pass update version number, echo it to console and upload the distribution package to TestPyPI
@@ -54,8 +57,9 @@ uninstall:
 	$(PIP) uninstall $(APP)
 
 # Run tests
-test:
-	echo "Running unit tests..."
+test: 
+	@export PYTHONPATH=./
+	@echo "Running unit tests..."
 	$(PYTEST) -v tests
 
 ## update-version: Read the version number from VERSION file, it will look like A.B.C Increment the third (C) number by 1 and write it back to the VERSION file

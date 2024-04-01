@@ -28,7 +28,11 @@ build-major:
 	@python3 build.py --image djh00t/klingon-serial --major
 
 test:
+	@export PYTHONPATH=./:$PYTHONPATH
 	pytest -v
+
+install:
+	pip install -r requirements.txt
 
 clean:
 	docker system prune -af --volumes

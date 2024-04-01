@@ -1,4 +1,4 @@
-name: Docker Build Pre-Checks
+name: OpenFaaS Pre-Checks & Create PR
 
 on:
   push:
@@ -12,6 +12,7 @@ on:
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
+  
 jobs:
   prepare-version-pr:
     runs-on: ubuntu-latest
@@ -55,6 +56,32 @@ jobs:
           const base = 'main';
           const labels = ['pre-release'];
 
+
+          // Check if the branch already exists
+          let branchExists = false;
+          try {
+            await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: branchName
+            });
+            branchExists = true;
+          } catch (error) {
+            if (error.status !== 404) {
+              throw error;
+            }
+          }
+
+          // Create the branch if it does not exist
+          if (!branchExists) {
+            const refResponse = await github.rest.git.createRef({
+              ...context.repo,
+              ref: `refs/heads/${branchName}`,
+              sha: context.sha
+            });
+            console.log(`Created ref ${refResponse.data.ref}`);
+          }
+
           // Fetch commits for the pull request
           const compareResponse = await github.rest.repos.compareCommits({
             owner: context.repo.owner,
@@ -65,12 +92,6 @@ jobs:
           const commits = compareResponse.data.commits;
           body += commits.map(commit => `- ${commit.commit.message} (${commit.sha})`).join('\n') + '\n';
 
-          const headRef = await github.rest.git.createRef({
-            ...context.repo,
-            ref: `refs/heads/${branchName}`,
-            sha: context.sha
-          });
-          console.log(`Created ref ${headRef.data.ref}`);
 
           const pullRequest = await github.rest.pulls.create({
             ...context.repo,

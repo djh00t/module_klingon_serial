@@ -1,4 +1,4 @@
-name: Post-PR Merge CI
+name: Klingon Serial Post-PR Merge CI
 
 # Controls when the action will run. 
 on:
