@@ -28,7 +28,7 @@ build-major:
 	@python3 build.py --image djh00t/klingon-serial --major
 
 test:
-	export PYTHONPATH=./:$PYTHONPATH
+	@export PYTHONPATH=./:$PYTHONPATH
 	pytest -v
 
 install:
