@@ -24,8 +24,10 @@ check-packages:
 	fi
 	@echo "Installing missing packages from requirements.txt..."
 	$(PIP) install --requirement requirements.txt
-	echo "Installing twine and wheel..."
-	$(PIP) install twine wheel
+	echo "Install twine"
+	$(PIP) install twine
+	@echo "Installing wheel..."
+    $(PIP) install wheel
 
 ## sdist: Create a source distribution package
 sdist: clean
