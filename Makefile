@@ -54,8 +54,9 @@ uninstall:
 	$(PIP) uninstall $(APP)
 
 # Run tests
-test: export PYTHONPATH=./
-	echo "Running unit tests..."
+test: 
+	@export PYTHONPATH=./
+	@echo "Running unit tests..."
 	$(PYTEST) -v tests
 
 ## update-version: Read the version number from VERSION file, it will look like A.B.C Increment the third (C) number by 1 and write it back to the VERSION file
