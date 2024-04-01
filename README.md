@@ -1,4 +1,5 @@
 # Klingon Serial Python Module
+[![klingon-serial unit tests](https://github.com/djh00t/module_klingon_serial/actions/workflows/klingon-serial-unit-tests.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/klingon-serial-unit-tests.yaml)
 [![Pre-PR Merge CI](https://github.com/djh00t/module_klingon_serial/actions/workflows/pre-pr-merge.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/pre-pr-merge.yaml) [![.github/workflows/post-pr-merge.yaml](https://github.com/djh00t/module_klingon_serial/actions/workflows/post-pr-merge.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/post-pr-merge.yaml)
 ## Overview
 
