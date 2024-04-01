@@ -1,4 +1,4 @@
-name: Docker Build Pre-Checks
+name: OpenFaaS Docker Build Pre-Checks
 
 on:
   push:
