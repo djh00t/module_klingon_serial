@@ -35,6 +35,7 @@ sdist: clean
 
 ## wheel: Create a wheel distribution package
 wheel: clean
+	$(PIP) install wheel  # Install the wheel package
 	$(PYTHON) setup.py sdist bdist_wheel
 
 ## upload-test: Run tests, if they pass update version number, echo it to console and upload the distribution package to TestPyPI
