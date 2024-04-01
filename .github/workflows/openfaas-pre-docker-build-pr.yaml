@@ -51,9 +51,19 @@ jobs:
           const newVersion = process.env.new_version;
           const branchName = `release-${newVersion}`;
           const title = `Release ${newVersion}`;
-          const body = '## Changelog\n<!-- markdown-changelog-generator -->';
+          let body = '## Changelog\n';
           const base = 'main';
           const labels = ['pre-release'];
+
+          // Fetch commits for the pull request
+          const compareResponse = await github.rest.repos.compareCommits({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            base: base,
+            head: branchName
+          });
+          const commits = compareResponse.data.commits;
+          body += commits.map(commit => `- ${commit.commit.message} (${commit.sha})`).join('\n') + '\n';
 
           const headRef = await github.rest.git.createRef({
             ...context.repo,
