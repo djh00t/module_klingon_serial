@@ -35,6 +35,10 @@ test:
 	@echo "Running unit tests..."
 	$(PYTEST) -v tests
 
+## sdist: Create a source distribution package
+sdist: clean
+	poetry build -f sdist
+
 ## build: Create a distribution package
 build: clean
 	poetry build
