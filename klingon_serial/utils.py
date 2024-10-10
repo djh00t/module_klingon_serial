@@ -4,9 +4,8 @@ retrieving the MAC address and network interface, and determining the debug mode
 """
 import os
 import psutil
-import uuid
-import platform
-from .strtobool import strtobool
+import re
+from .str2bool import str2bool
 
 
 def validate_serial(serial):
@@ -31,7 +30,7 @@ def get_debug():
     if debug is None:
         return False
     try:
-        return bool(strtobool(debug))
+        return bool(str2bool(debug))
     except ValueError:
         return False
 
@@ -52,14 +51,7 @@ def get_mac_address_and_interface():
                     mac_address = addr.address
                     return mac_address, primary_interface  # Return on first found interface
     except Exception as e:
-        print(f"Error retrieving network interface: {e}")
-    # Get primary network interface by looking at the default route
-    primary_interface = None
-    for interface, addrs in psutil.net_if_addrs().items():
-        for addr in addrs:
-            if addr.family == psutil.AF_LINK:
-                primary_interface = interface
-                mac_address = addr.address
-                return mac_address, primary_interface  # Return on first found interface
+        import logging
+        logging.error(f"Error retrieving network interface: {e}")
 
     return None, None  # Return None, None if no interface found
