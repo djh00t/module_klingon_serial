@@ -2,6 +2,7 @@
 
 [![CodeQL](https://github.com/djh00t/module_klingon_serial/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/github-code-scanning/codeql) [![Klingon Serial Post-PR Merge CI](https://github.com/djh00t/module_klingon_serial/actions/workflows/post-pr-merge.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/post-pr-merge.yaml) [![klingon-serial-unit-tests](https://github.com/djh00t/module_klingon_serial/actions/workflows/klingon-serial-unit-tests.yaml/badge.svg)](https://github.com/djh00t/module_klingon_serial/actions/workflows/klingon-serial-unit-tests.yaml)
 
+
 ## Overview
 
 The `klingon_serial` Python module is designed to generate a unique hexadecimal
