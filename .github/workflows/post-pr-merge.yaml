@@ -14,29 +14,50 @@ on:
       - 'requirements.txt'
   workflow_dispatch:
 concurrency: 
+  # The workflow will run only once per branch
   group: ${{ github.workflow }}-${{ github.ref }}
+  # The workflow will cancel if a run is in progress
   cancel-in-progress: true
 
 jobs:
   post-pr-merge:
+    # Permissions that the job needs
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+    
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    # Only run the job if the PR was merged
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    
     steps:
+      # Check out the repository
       - uses: actions/checkout@v3
+
+      # Set up Python 3.x
       - name: Set up Python 3.x
         uses: actions/setup-python@v3
         with:
           python-version: '3.x'
+
+      # Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           make check-packages
+
+      # Build and test the package
       - name: Build and test
         run: |
           pip install .
           make sdist
           make wheel
           make test
+
+      # Check the current version on TestPyPI
       - name: Check current version on TestPyPI
         id: check_version
         run: |
@@ -48,14 +69,28 @@ jobs:
           new_version="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
           echo "New version will be $new_version"
           echo "new_version=$new_version" >> $GITHUB_ENV
+
+      # Increment the version number in the VERSION file and set the VERSION
       - name: Update version file
         run: |
           echo "${{ env.new_version }}" > VERSION
           cat VERSION
+
+      # Attest the build provenance
+      - name: Attest
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: |
+            'dist/*.whl'
+            'dist/*.tar.gz'
+
+      # Push the package to TestPyPI
       - name: Push to TestPyPI
         if: github.ref == 'refs/heads/main' # This ensures that PyPI upload only happens on main branch merges.  
         run: |
             make upload-test TEST_PYPI_USER_AGENT=${{ secrets.TEST_PYPI_USER_AGENT }} VERSION=${{ env.new_version }}
+
+      # Pull the package from TestPyPI and run tests
       - name: Push to PyPI
         if: github.ref == 'refs/heads/main' # This ensures that PyPI upload only happens on main branch merges.
         run: |
