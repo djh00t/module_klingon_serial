@@ -9,14 +9,13 @@ homepage = "https://github.com/djh00t/module_klingon_serial"
 repository = "https://github.com/djh00t/module_klingon_serial"
 keywords = ["serial", "unique", "identifier"]
 
-include = ["LICENSE", "README.md", "VERSION"]
-
-exclude = ["requirements.txt"]
-
 [tool.poetry.dependencies]
 python = ">=3.9"
 psutil = "*"
 str2bool = "*"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
 
 [tool.poetry.scripts]
 klingon_serial = "klingon_serial:main"
@@ -30,3 +29,8 @@ ignore_errors = true
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "semver"
