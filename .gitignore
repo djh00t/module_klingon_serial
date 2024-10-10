@@ -4,5 +4,7 @@
 **/.coverage
 **cache/*
 **/*.zip
-**.egg-info/*
-dist/*
+**.egg-info/
+dist/
+build/
+.pytest_cache/
