@@ -1,4 +1,0 @@
-psutil
-pytest>=6.0
-str2bool
-setuptools
