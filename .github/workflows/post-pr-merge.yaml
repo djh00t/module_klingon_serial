@@ -6,6 +6,7 @@ on:
     types: [closed]
     branches: [main]
     paths:
+      - '.github/workflows/post-pr-merge.yaml'
       - 'klingon_serial/**'
       - 'tests/**'
       - 'VERSION'
@@ -14,7 +15,7 @@ on:
       - 'requirements.txt'
   workflow_dispatch:
 concurrency: 
-  # The workflow will run only once per branch
+  # The workflow will run only one at a time per branch
   group: ${{ github.workflow }}-${{ github.ref }}
   # The workflow will cancel if a run is in progress
   cancel-in-progress: true
@@ -77,7 +78,7 @@ jobs:
           cat VERSION
 
       # Attest the build provenance
-      - name: Attest
+      - name: Attest Build Provenance
         uses: actions/attest-build-provenance@v1
         with:
           subject-path: |
