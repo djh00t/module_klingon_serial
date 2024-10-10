@@ -59,7 +59,9 @@ async def health():
         else:
             raise Exception("The / endpoint did not return a valid response.")
     except Exception as e:
-        return {"status": "error", "message": str(e)}, 500
+        import logging
+        logging.error("An error occurred in the /health endpoint", exc_info=True)
+        return {"status": "error", "message": "An internal error has occurred."}, 500
 
 
 @app.get("/favicon.ico")
