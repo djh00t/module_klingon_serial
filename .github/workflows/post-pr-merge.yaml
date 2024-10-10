@@ -25,6 +25,7 @@ jobs:
     # Permissions that the job needs
     permissions:
       id-token: write
+      packages: write
       contents: read
       attestations: write
     
