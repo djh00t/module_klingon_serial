@@ -17,12 +17,21 @@ clean:
 install:
 	poetry install
 
+# Pre-push cleanup target
+push-prep:
+
+	@echo "Running poetry lock......................................................... 🔒"
+	@poetry lock
+	@echo "Removing temporary files.................................................... 🧹"
+	@find . -type f -name '*.pyc' -delete
+	@echo "Removed temporary files..................................................... ✅"
+
 ## uninstall: Uninstall the local package
 uninstall:
 	poetry remove $(APP)
 
 # Run tests
-test: 
+test:
 	@echo "Running unit tests..."
 	$(PYTEST) -v tests
 
@@ -49,4 +58,4 @@ update-version:
 	echo "New version number is $$NEW_VERSION"
 
 .DEFAULT_GOAL := test
-.PHONY: clean install uninstall test build upload-test upload update-version
+.PHONY: clean install uninstall test build upload-test upload update-version push-prep

@@ -49,12 +49,18 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Run make build
+    - name: Set up Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.5.1
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Run poetry build
       run: |
         cd openfaas
-        rm -rf ../requirements.txt
-        cp requirements.txt ../
-        make check-buildx
-        make build
+        poetry install
+        poetry run make check-buildx
+        poetry run make build
       env:
         BUILDX_BUILDER: ${{ steps.buildx.outputs.name }}
