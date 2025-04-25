@@ -6,6 +6,7 @@ on:
     types: [closed]
     branches: [main]
     paths:
+      - '.github/workflows/post-pr-merge.yaml'
       - 'klingon_serial/**'
       - 'tests/**'
       - 'VERSION'
@@ -14,7 +15,7 @@ on:
       - 'requirements.txt'
   workflow_dispatch:
 concurrency: 
-  # The workflow will run only once per branch
+  # The workflow will run only one at a time per branch
   group: ${{ github.workflow }}-${{ github.ref }}
   # The workflow will cancel if a run is in progress
   cancel-in-progress: true
@@ -24,6 +25,7 @@ jobs:
     # Permissions that the job needs
     permissions:
       id-token: write
+      packages: write
       contents: read
       attestations: write
     
@@ -43,41 +45,41 @@ jobs:
         with:
           python-version: '3.x'
 
+      # Set up Poetry
+      - name: Set up Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
       # Install dependencies
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          make check-packages
+          poetry install
 
       # Build and test the package
       - name: Build and test
         run: |
-          pip install .
-          make sdist
-          make wheel
-          make test
+          poetry run make sdist
+          poetry run make wheel
+          poetry run make test
 
-      # Check the current version on TestPyPI
-      - name: Check current version on TestPyPI
+      # Check the current version and increment
+      - name: Check current version and increment
         id: check_version
         run: |
-          echo "Checking current version on TestPyPI..."
-          current_version=$(pip index versions --index-url https://test.pypi.org/simple/ klingon-serial | grep -Po '(?<=\().*?(?=\))' | sort -V | tail -n 1)
-          echo "Current version on TestPyPI is $current_version"
+          current_version=$(poetry version -s)
+          echo "Current version is $current_version"
           IFS='.' read -ra VERSION_PARTS <<< "$current_version"
           VERSION_PARTS[-1]=$((VERSION_PARTS[-1]+1))
           new_version="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
           echo "New version will be $new_version"
           echo "new_version=$new_version" >> $GITHUB_ENV
-
-      # Increment the version number in the VERSION file and set the VERSION
-      - name: Update version file
-        run: |
-          echo "${{ env.new_version }}" > VERSION
-          cat VERSION
+          poetry version $new_version
 
       # Attest the build provenance
-      - name: Attest
+      - name: Attest Build Provenance
         uses: actions/attest-build-provenance@v1
         with:
           subject-path: |

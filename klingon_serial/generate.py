@@ -2,7 +2,7 @@ import uuid
 import re
 import os
 from datetime import datetime, timezone
-from .strtobool import strtobool
+from .str2bool import str2bool
 from .utils import get_debug, get_mac_address_and_interface
 
 def is_valid_serial(serial):

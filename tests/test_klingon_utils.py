@@ -1,4 +1,4 @@
-from klingon_serial.strtobool import strtobool
+from klingon_serial.str2bool import str2bool
 from klingon_serial.utils import get_debug, get_mac_address_and_interface
 import psutil
 import os

@@ -5,76 +5,61 @@ TWINE_USERNAME ?= __token__
 TEST_TWINE_PASSWORD ?= $(TEST_PYPI_USER_AGENT)
 PYPI_TWINE_PASSWORD ?= $(PYPI_USER_AGENT)
 RM = rm -f
-PYTHON = python
-PIP = pip
-PYTEST = pytest
-TWINE = twine
+PYTEST = poetry run pytest
+TWINE = poetry publish
 APP = klingon_serial
 
 # Clean up build files
 clean:
 	$(RM) -r build dist *.egg-info .mypy_cache .pytest_cache __pycache__ */__pycache__ *.zip *.gz *.whl */*.zip */*.gz */*.whl
 
-## check-packages: Check for required pip packages and requirements.txt, install if missing
-check-packages:
-	@echo "Checking for required pip packages and requirements.txt..."
-	@if [ ! -f requirements.txt ]; then \
-		echo "requirements.txt not found. Please add it to the project root."; \
-		exit 1; \
-	fi
-	@echo "Installing twine and wheel..."
-	$(PIP) install twine wheel
-	@echo "Installing wheel..."
-	$(PIP) install wheel
-	@echo "Installing missing packages from requirements.txt..."
-	$(PIP) install --requirement requirements.txt
-
-## sdist: Create a source distribution package
-sdist: clean
-	$(PYTHON) setup.py sdist
-
-## wheel: Create a wheel distribution package
-wheel: clean
-	$(PIP) install wheel  # Install the wheel package
-	$(PYTHON) setup.py sdist bdist_wheel
-
-## upload-test: Run tests, if they pass update version number, echo it to console and upload the distribution package to TestPyPI
-upload-test: test wheel
-	echo "Uploading Version $$NEW_VERSION to TestPyPI..."
-	$(TWINE) upload --repository-url https://test.pypi.org/legacy/ --username $(TWINE_USERNAME) --password $(TEST_TWINE_PASSWORD) dist/*
-
-## upload: Run tests, if they pass update version number and upload the distribution package to PyPI
-upload: test wheel
-	echo "Uploading Version $$NEW_VERSION to PyPI..."
-	$(TWINE) upload --username $(TWINE_USERNAME) --password $(PYPI_TWINE_PASSWORD) dist/*
-
 ## install: Install the package locally
 install:
-	$(PIP) install -e .
+	poetry install
+
+# Pre-push cleanup target
+push-prep:
+
+	@echo "Running poetry lock......................................................... 🔒"
+	@poetry lock
+	@echo "Removing temporary files.................................................... 🧹"
+	@find . -type f -name '*.pyc' -delete
+	@echo "Removed temporary files..................................................... ✅"
 
 ## uninstall: Uninstall the local package
 uninstall:
-	$(PIP) uninstall $(APP)
+	poetry remove $(APP)
 
 # Run tests
-test: 
-	@export PYTHONPATH=./
+test:
 	@echo "Running unit tests..."
 	$(PYTEST) -v tests
 
-## update-version: Read the version number from VERSION file, it will look like A.B.C Increment the third (C) number by 1 and write it back to the VERSION file
+## sdist: Create a source distribution package
+sdist: clean
+	poetry build -f sdist
+
+## build: Create a distribution package
+build: clean
+	poetry build
+
+## upload-test: Run tests, if they pass, upload the distribution package to TestPyPI
+upload-test: test build
+	echo "Uploading to TestPyPI..."
+	$(TWINE) --repository testpypi
+
+## upload: Run tests, if they pass, upload the distribution package to PyPI
+upload: test build
+	echo "Uploading to PyPI..."
+	$(TWINE)
+
+## update-version: Increment the patch version number in pyproject.toml
 update-version:
 	echo "Updating version number..."
 	NEW_VERSION=$$(awk -F. '{print $$1"."$$2"."$$3+1}' VERSION); \
 	echo $$NEW_VERSION > VERSION; \
-	sed -i'' -e "s/version='[0-9]*\.[0-9]*\.[0-9]*'/version='$$NEW_VERSION'/g" setup.py; \
+	sed -i'' -e "s/version = \"[0-9]*\.[0-9]*\.[0-9]*\"/version = \"$$NEW_VERSION\"/g" pyproject.toml; \
 	echo "New version number is $$NEW_VERSION"
 
-## generate-pyproject: Generate a pyproject.toml file
-generate-pyproject:
-	echo "[build-system]" > pyproject.toml
-	echo "requires = ['setuptools', 'wheel']" >> pyproject.toml
-	echo "build-backend = 'setuptools.build_meta'" >> pyproject.toml
-
 .DEFAULT_GOAL := test
-.PHONY: clean check-packages sdist wheel upload-test upload install uninstall test update-version generate-pyproject
+.PHONY: clean install uninstall test build upload-test upload update-version push-prep
